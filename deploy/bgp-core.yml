@@ -22,6 +22,6 @@
           - "set protocols bgp neighbor {{ wg_edge_1_address }} peer-group 'EDGES'"
           - "set protocols bgp neighbor {{ wg_edge_2_address }} peer-group 'EDGES'"
           - "set protocols bgp peer-group EDGES address-family ipv4-unicast route-reflector-client"
-          - "set protocols bgp peer-group EDGES address-family ipv4-unicast next-hop-self"
+          - "set protocols bgp peer-group EDGES address-family ipv4-unicast nexthop-self"
 
         save: true
