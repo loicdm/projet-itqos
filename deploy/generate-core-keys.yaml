@@ -17,13 +17,9 @@
     - name: Parse keys
       set_fact:
         wg_private_key: "{{ wg_out.stdout[0] | regex_search('Private key: ([A-Za-z0-9+/=]+)', '\\1') }}"
-        wg_public_key:  "{{ wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1') }}"
+        wg_public_key: "{{ wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1') }}"
       no_log: false
 
-
-    - name: PRINT env
-      debug:
-        msg: "{{ { {{ inventory_hostname }} : {{ wg_public_key[0] }} } }} | to_json"
     - name: Create WIREGUARD_KEYS variable group in Semaphore
       delegate_to: localhost
       uri:
@@ -37,7 +33,7 @@
         body:
           name: "WIREGUARD_KEYS"
           project_id: "{{ project_id }}"
-          env: "{{ { {{ inventory_hostname }} : {{ wg_public_key[0] }} } }} | to_json"
+          env: "{{ { inventory_hostname: wg_public_key[0] } | to_json }}"
           json: "{}"
           password: ""
         status_code: [200, 201]
@@ -47,7 +43,3 @@
     - name: Debug API response
       debug:
         var: semaphore_api_result
-
-    
-    
-
