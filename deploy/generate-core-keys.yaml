@@ -1,0 +1,35 @@
+- hosts: core-2
+  connection: network_cli
+  gather_facts: no
+
+  vars:
+    semaphore_url: "http://127.0.0.1:3000"
+    project_id: 1
+    semaphore_token: "{{ lookup('env','SEMAPHORE_TOKEN') }}"
+
+  tasks:
+    - name: Generate WG keys
+      vyos_command:
+        commands: generate pki wireguard key-pair
+      register: wg_out
+      no_log: true
+
+    - name: Parse keys
+      set_fact:
+        wg_private_key: "{{ wg_out.stdout[0] | regex_search('Private key: ([A-Za-z0-9+/=]+)', '\\1') }}"
+        wg_public_key:  "{{ wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1') }}"
+      no_log: true
+
+    - name: Store public key in Semaphore
+      delegate_to: localhost
+      uri:
+        url: "{{ semaphore_url }}/api/project/{{ project_id }}/environment"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ semaphore_token }}"
+          Content-Type: "application/json"
+        body_format: json
+        body:
+          name: "WG_PUB_{{ inventory_hostname }}"
+          value: "{{ wg_public_key }}"
+
