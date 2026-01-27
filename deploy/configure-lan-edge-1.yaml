@@ -1,0 +1,12 @@
+- hosts: edge-1
+  gather_facts: no
+  vars:
+    lan_edge_1_address: "{{ lookup('env','LAN_EDGE_1_ADDRESS') }}"
+    lan_mask: "{{ lookup('env','LAN_MASK') }}"
+
+  tasks:
+    - name: Configure LAN on edge-1
+      vyos.vyos.vyos_config:
+        lines:
+          - "set interfaces ethernet eth1 address '{{ lan_edge_1_address }}/{{ lan_mask }}'"
+        save: true

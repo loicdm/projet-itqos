@@ -1,0 +1,19 @@
+- hosts: edge-2
+  gather_facts: no
+  vars:
+    wg_core_address: "{{ lookup('env','WG_CORE_ADDRESS') }}"
+    wg_edge_2_address: "{{ lookup('env','WG_EDGE_2_ADDRESS') }}"
+    lan_edge_2_network: "{{ lookup('env','LAN_EDGE_2_NETWORK') }}"
+    lan_mask: "{{ lookup('env','LAN_MASK') }}"
+    bgp_as: "{{ lookup('env','BGP_AS') }}"
+
+  tasks:
+    - name: Configure BGP on edge-2
+      vyos.vyos.vyos_config:
+        lines:
+          - "set protocols bgp {{ bgp_as }} parameters router-id {{ wg_edge_2_address }}"
+          - "set protocols bgp {{ bgp_as }} neighbor {{ wg_core_address }} remote-as {{ bgp_as }}"
+
+          - "set protocols bgp {{ bgp_as }} network {{ lan_edge_2_network }}/{{ lan_mask }}"
+
+        save: true
