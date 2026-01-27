@@ -22,6 +22,10 @@
           - "set protocols bgp neighbor {{ wg_edge_1_address }} address-family ipv4-unicast"
           - "set protocols bgp neighbor {{ wg_edge_2_address }} address-family ipv4-unicast"
 
+          # Route reflector (required for iBGP redistribution)
+          - "set protocols bgp neighbor {{ wg_edge_1_address }} address-family ipv4-unicast route-reflector-client"
+          - "set protocols bgp neighbor {{ wg_edge_2_address }} address-family ipv4-unicast route-reflector-client"
+
           # Force traffic to go via the core (HUB)
           - "set protocols bgp neighbor {{ wg_edge_1_address }} address-family ipv4-unicast nexthop-self"
           - "set protocols bgp neighbor {{ wg_edge_2_address }} address-family ipv4-unicast nexthop-self"
