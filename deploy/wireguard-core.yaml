@@ -3,8 +3,8 @@
   vars:
     wg_interface: "{{ lookup('env','WG_CORE_INTERFACE') }}"
     wg_core_address: "{{ lookup('env','WG_CORE_ADDRESS') }}"
-    wg_mask: "{{ lookup('env','WG_CORE_MASK') }}"
-    wg_port: "{{ lookup('env','WG_CORE_PORT') }}"
+    wg_mask: "{{ lookup('env','WG_MASK') }}"
+    wg_port: "{{ lookup('env','WG_PORT') }}"
     wg_core_private_key: "{{ lookup('env','WG_CORE_PRIVATE_KEY') }}"
     wg_edge_1_address: "{{ lookup('env','WG_EDGE_1_ADDRESS') }}"
     wg_edge_2_address: "{{ lookup('env','WG_EDGE_2_ADDRESS') }}"
