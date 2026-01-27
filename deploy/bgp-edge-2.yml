@@ -2,7 +2,6 @@
   gather_facts: no
   vars:
     wg_core_address: "{{ lookup('env','WG_CORE_ADDRESS') }}"
-    wg_edge_1_address: "{{ lookup('env','WG_EDGE_1_ADDRESS') }}"
     wg_edge_2_address: "{{ lookup('env','WG_EDGE_2_ADDRESS') }}"
     lan_edge_2_network: "{{ lookup('env','LAN_EDGE_2_NETWORK') }}"
     lan_mask: "{{ lookup('env','LAN_MASK') }}"
@@ -12,12 +11,15 @@
     - name: Configure BGP on edge-2
       vyos.vyos.vyos_config:
         lines:
+          # BGP global
           - "set protocols bgp system-as {{ bgp_as }}"
           - "set protocols bgp parameters router-id {{ wg_edge_2_address }}"
-          - "set protocols bgp neighbor {{ wg_core_address }} remote-as {{ bgp_as }}"
 
-          - "set protocols bgp address-family ipv4-unicast network {{ lan_edge_2_network }}/{{ lan_mask }}"
+          # Neighbor = core only
+          - "set protocols bgp neighbor {{ wg_core_address }} remote-as {{ bgp_as }}"
           - "set protocols bgp neighbor {{ wg_core_address }} address-family ipv4-unicast"
-          - "set protocols bgp neighbor {{ wg_edge_1_address }} remote-as 65000"
-          - "set protocols bgp neighbor {{ wg_edge_1_address }} address-family ipv4-unicast"
+
+          # Advertise local LAN
+          - "set protocols bgp address-family ipv4-unicast network {{ lan_edge_2_network }}/{{ lan_mask }}"
+
         save: true

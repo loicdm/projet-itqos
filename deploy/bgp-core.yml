@@ -10,12 +10,20 @@
     - name: Configure BGP on core
       vyos.vyos.vyos_config:
         lines:
+          # BGP global
           - "set protocols bgp system-as {{ bgp_as }}"
           - "set protocols bgp parameters router-id {{ wg_core_address }}"
 
+          # Neighbors
           - "set protocols bgp neighbor {{ wg_edge_1_address }} remote-as {{ bgp_as }}"
           - "set protocols bgp neighbor {{ wg_edge_2_address }} remote-as {{ bgp_as }}"
+
+          # Activate IPv4 unicast
           - "set protocols bgp neighbor {{ wg_edge_1_address }} address-family ipv4-unicast"
           - "set protocols bgp neighbor {{ wg_edge_2_address }} address-family ipv4-unicast"
+
+          # Force traffic to go via the core (HUB)
+          - "set protocols bgp neighbor {{ wg_edge_1_address }} address-family ipv4-unicast nexthop-self"
+          - "set protocols bgp neighbor {{ wg_edge_2_address }} address-family ipv4-unicast nexthop-self"
 
         save: true
