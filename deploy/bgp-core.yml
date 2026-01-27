@@ -10,12 +10,13 @@
     - name: Configure BGP on core
       vyos.vyos.vyos_config:
         lines:
-          - "set protocols bgp {{ bgp_as }} parameters router-id {{ wg_core_address }}"
+          - "set protocols bgp system-as {{ bgp_as }}"
+          - "set protocols bgp parameters router-id {{ wg_core_address }}"
 
-          - "set protocols bgp {{ bgp_as }} neighbor {{ wg_edge_1_address }} remote-as {{ bgp_as }}"
-          - "set protocols bgp {{ bgp_as }} neighbor {{ wg_edge_2_address }} remote-as {{ bgp_as }}"
+          - "set protocols bgp neighbor {{ wg_edge_1_address }} remote-as {{ bgp_as }}"
+          - "set protocols bgp neighbor {{ wg_edge_2_address }} remote-as {{ bgp_as }}"
 
-          - "set protocols bgp {{ bgp_as }} neighbor {{ wg_edge_1_address }} route-reflector-client"
-          - "set protocols bgp {{ bgp_as }} neighbor {{ wg_edge_2_address }} route-reflector-client"
+          - "set protocols bgp neighbor {{ wg_edge_1_address }} route-reflector-client"
+          - "set protocols bgp neighbor {{ wg_edge_2_address }} route-reflector-client"
 
         save: true

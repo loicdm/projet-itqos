@@ -11,9 +11,10 @@
     - name: Configure BGP on edge-1
       vyos.vyos.vyos_config:
         lines:
-          - "set protocols bgp {{ bgp_as }} parameters router-id {{ wg_edge_1_address }}"
-          - "set protocols bgp {{ bgp_as }} neighbor {{ wg_core_address }} remote-as {{ bgp_as }}"
+          - "set protocols bgp system-as {{ bgp_as }}"
+          - "set protocols bgp parameters router-id {{ wg_edge_1_address }}"
+          - "set protocols bgp neighbor {{ wg_core_address }} remote-as {{ bgp_as }}"
 
-          - "set protocols bgp {{ bgp_as }} network {{ lan_edge_1_network }}/{{ lan_mask }}"
+          - "set protocols bgp network {{ lan_edge_1_network }}/{{ lan_mask }}"
 
         save: true
