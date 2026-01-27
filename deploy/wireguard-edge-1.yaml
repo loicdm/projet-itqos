@@ -26,6 +26,6 @@
           - "set interfaces wireguard {{ wg_interface }} peer core allowed-ips '{{ wg_network }}/{{ wg_mask }}'"
           - "set interfaces wireguard {{ wg_interface }} peer core persistent-keepalive '25'"
           # Edge-2 LAN
-          - "set interfaces wireguard {{ wg_interface }} peer edge2 allowed-ips '{{ lan_edge_2_network }}/{{ lan_mask }}'"
+          - "set interfaces wireguard {{ wg_interface }} peer core allowed-ips '{{ lan_edge_2_network }}/{{ lan_mask }}'"
 
         save: true
