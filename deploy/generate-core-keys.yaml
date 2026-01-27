@@ -3,7 +3,7 @@
   gather_facts: no
 
   vars:
-    semaphore_url: "http://127.0.0.1:3000"
+    semaphore_url: "http://semaphore:3000"
     project_id: 1
     semaphore_token: "{{ lookup('env','SEMAPHORE_TOKEN') }}"
 
