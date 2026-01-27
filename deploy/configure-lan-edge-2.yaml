@@ -23,7 +23,6 @@
           - "set service dhcp-server shared-network-name LAN2 subnet {{ lan_edge_2_network }}/{{ lan_mask }} subnet-id {{ lan_edge_2_subnet_id }}"
           - "set service dhcp-server shared-network-name LAN2 subnet {{ lan_edge_2_network }}/{{ lan_mask }} option default-router {{ lan_edge_2_address }}"
           - "set service dhcp-server shared-network-name LAN2 subnet {{ lan_edge_2_network }}/{{ lan_mask }} option name-server {{ dns_server }}"
-
           - "set service dhcp-server shared-network-name LAN2 subnet {{ lan_edge_2_network }}/{{ lan_mask }} range 0 start {{ lan_edge_2_dhcp_range_start }}"
           - "set service dhcp-server shared-network-name LAN2 subnet {{ lan_edge_2_network }}/{{ lan_mask }} range 0 stop {{ lan_edge_2_dhcp_range_end }}"
         save: true
@@ -32,6 +31,6 @@
       vyos.vyos.vyos_config:
         lines:
           - "set nat source rule 100 outbound-interface eth0"
-          - "set nat source rule 100 source address {{ lan_edge_1_network }}/{{ lan_mask }}"
+          - "set nat source rule 100 source address {{ lan_edge_2_network }}/{{ lan_mask }}"
           - "set nat source rule 100 translation address masquerade"
         save: true
