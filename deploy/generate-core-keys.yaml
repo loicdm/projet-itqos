@@ -23,7 +23,7 @@
 
     - name: PRINT env
       debug:
-        env: "{\"{{ inventory_hostname }}\" : \"{{ wg_public_key[0] }}\"}"
+        msg: "{\"{{ inventory_hostname }}\" : \"{{ wg_public_key[0] }}\"}"
     - name: Create WIREGUARD_KEYS variable group in Semaphore
       delegate_to: localhost
       uri:
