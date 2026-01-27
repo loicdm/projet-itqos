@@ -28,8 +28,12 @@
         headers:
           Authorization: "Bearer {{ semaphore_token }}"
           Content-Type: "application/json"
+          Accept: "application/json"
         body_format: json
         body:
           name: "WG_PUB_{{ inventory_hostname }}"
           value: "{{ wg_public_key }}"
+          secret: false
+        status_code: [200, 201, 204]
+    
 
