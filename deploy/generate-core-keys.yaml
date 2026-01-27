@@ -23,6 +23,8 @@
 
     - name: Create WIREGUARD_KEYS variable group in Semaphore
       delegate_to: localhost
+      debug:
+        env: "{\"{{ inventory_hostname }}\" : \"{{ wg_public_key[0] }}\"}"
       uri:
         url: "{{ semaphore_url }}/api/project/{{ project_id }}/environment"
         method: POST
@@ -44,7 +46,6 @@
     - name: Debug API response
       debug:
         var: semaphore_api_result
-        env: "{\"{{ inventory_hostname }}\" : \"{{ wg_public_key[0] }}\"}"
 
     
     
