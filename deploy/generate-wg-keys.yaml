@@ -14,5 +14,5 @@
 
     - debug:
         msg:
-          - "Private: {{ wg_private_key }}"
-          - "Public:  {{ wg_public_key }}"
+          - "Private: {{ wg_private_key[0] }}"
+          - "Public:  {{ wg_public_key[0] }}"
