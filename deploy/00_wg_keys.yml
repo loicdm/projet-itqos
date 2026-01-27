@@ -1,0 +1,18 @@
+- hosts: routers
+  gather_facts: no
+  tasks:
+    - name: Generate WG keys if missing
+      shell: |
+        if [ ! -f /config/auth/wg_private.key ]; then
+          wg genkey | tee /config/auth/wg_private.key | wg pubkey > /config/auth/wg_public.key
+        fi
+      become: true
+
+    - name: Read WG public key
+      shell: cat /config/auth/wg_public.key
+      register: pubkey
+      changed_when: false
+
+    - set_fact:
+        wg_public_key: "{{ pubkey.stdout }}"
+
