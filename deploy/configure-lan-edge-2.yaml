@@ -3,10 +3,25 @@
   vars:
     lan_edge_2_address: "{{ lookup('env','LAN_EDGE_2_ADDRESS') }}"
     lan_mask: "{{ lookup('env','LAN_MASK') }}"
+    lan_edge_2_network: "{{ lookup('env','LAN_EDGE_2_NETWORK') }}"
+    lan_edge_2_dhcp_range_start: "{{ lookup('env','LAN_EDGE_2_DHCP_RANGE_START') }}"
+    lan_edge_2_dhcp_range_end: "{{ lookup('env','LAN_EDGE_2_DHCP_RANGE_END') }}"
+    dns_server: "{{ lookup('env','DNS_SERVER') }}"
 
   tasks:
-    - name: Configure LAN on edge-2
+    - name: Configure LAN interface on edge-2
       vyos.vyos.vyos_config:
         lines:
           - "set interfaces ethernet eth1 address '{{ lan_edge_2_address }}/{{ lan_mask }}'"
+
+        save: true
+
+    - name: Configure DHCP server on edge-2
+      vyos.vyos.vyos_config:
+        lines:
+          - "set service dhcp-server shared-network-name LAN2 subnet {{ lan_edge_2_network }}/{{ lan_mask }} default-router {{ lan_edge_2_address }}"
+          - "set service dhcp-server shared-network-name LAN2 subnet {{ lan_edge_2_network }}/{{ lan_mask }} dns-server {{ dns_server }}"
+          - "set service dhcp-server shared-network-name LAN2 subnet {{ lan_edge_2_network }}/{{ lan_mask }} range 0 start {{ dhcp_range_start }}"
+          - "set service dhcp-server shared-network-name LAN2 subnet {{ lan_edge_2_network }}/{{ lan_mask }} range 0 stop {{ dhcp_range_end }}"
+
         save: true
