@@ -19,7 +19,8 @@
           - "set interfaces wireguard {{ wg_interface }} private-key '{{ wg_edge_1_private_key }}'"
 
           - "set interfaces wireguard {{ wg_interface }} peer core public-key '{{ wg_core_public_key }}'"
-          - "set interfaces wireguard {{ wg_interface }} peer core endpoint '{{ wg_core_endpoint }}:{{ wg_port }}'"
+          - "set interfaces wireguard {{ wg_interface }} peer core address '{{ wg_core_endpoint }}'"
+          - "set interfaces wireguard {{ wg_interface }} peer core port '{{ wg_port }}'"
           - "set interfaces wireguard {{ wg_interface }} peer core allowed-ips '{{ wg_network }}/{{ wg_mask }}'"
           - "set interfaces wireguard {{ wg_interface }} peer core persistent-keepalive '25'"
 
