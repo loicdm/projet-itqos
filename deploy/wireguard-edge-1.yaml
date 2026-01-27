@@ -1,7 +1,7 @@
 - hosts: edge-1
   gather_facts: no
   vars:
-    wg_interface: "{{ lookup('env','WG_EDGE_INTERFACE') }}"
+    wg_interface: "{{ lookup('env','WG_INTERFACE') }}"
     wg_edge_1_address: "{{ lookup('env','WG_EDGE_1_ADDRESS') }}"
     wg_mask: "{{ lookup('env','WG_MASK') }}"
     wg_edge_1_private_key: "{{ lookup('env','WG_EDGE_1_PRIVATE_KEY') }}"
