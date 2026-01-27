@@ -30,7 +30,7 @@
     - name: Configure NAT for LAN clients (Internet breakout)
       vyos.vyos.vyos_config:
         lines:
-          - "set nat source rule 100 outbound-interface eth0"
+          - "set nat source rule 100 outbound-interface name eth0"
           - "set nat source rule 100 source address {{ lan_edge_1_network }}/{{ lan_mask }}"
           - "set nat source rule 100 translation address masquerade"
         save: true
