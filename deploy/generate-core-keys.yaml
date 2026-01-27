@@ -25,7 +25,8 @@
         msg:
           name: "WIREGUARD_KEYS"
           project_id: "{{ project_id }}"
-          env: "{{ { inventory_hostname:wg_public_key[0] } | to_json | quote }}"
+          env:
+            "{{ inventory_hostname }}": "{{ wg_public_key[0] }}"
           json: "{}"
           password: ""
 
@@ -42,8 +43,9 @@
         body:
           name: "WIREGUARD_KEYS"
           project_id: "{{ project_id }}"
-          env: "{{ { inventory_hostname:wg_public_key[0] } | to_json | quote }}"
-          json: "{}"
+          env:
+            "{{ inventory_hostname }}": "{{ wg_public_key[0] }}"
+          json: {}
           password: ""
         status_code: [200, 201]
         return_content: true
