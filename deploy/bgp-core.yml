@@ -15,5 +15,7 @@
 
           - "set protocols bgp neighbor {{ wg_edge_1_address }} remote-as {{ bgp_as }}"
           - "set protocols bgp neighbor {{ wg_edge_2_address }} remote-as {{ bgp_as }}"
+          - "set protocols bgp neighbor {{ wg_edge_1_address }} address-family ipv4-unicast"
+          - "set protocols bgp neighbor {{ wg_edge_2_address }} address-family ipv4-unicast"
 
         save: true
