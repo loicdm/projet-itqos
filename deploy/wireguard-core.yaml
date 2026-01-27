@@ -23,6 +23,4 @@
           - "set interfaces wireguard {{ wg_core_interface }} peer {{ wg_edge_1_public_key }} allowed-ips '{{ wg_edge_1_address }}/32'"
           - "set interfaces wireguard {{ wg_core_interface }} peer {{ wg_edge_2_public_key }} allowed-ips '{{ wg_edge_2_address }}/32'"
 
-          - "set system ip forwarding enable"
-
         save: true
