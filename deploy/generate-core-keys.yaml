@@ -33,7 +33,7 @@
             {
               "name": "WIREGUARD_KEYS",
               "project_id": project_id,
-              "env": ({ inventory_hostname: wg_public_key } | to_json),
+              "env": ({ inventory_hostname: wg_public_key[0] } | to_json),
               "json": "{}",
               "password": ""
             } | to_nice_json
@@ -52,7 +52,7 @@
         body:
           name: "WIREGUARD_KEYS"
           project_id: "{{ project_id }}"
-          env: "{{ { inventory_hostname: wg_public_key } | to_json }}"
+          env: "{{ { inventory_hostname: wg_public_key[0] } | to_json }}"
           json: "{}"
           password: ""
         status_code: [200, 201]
