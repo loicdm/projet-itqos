@@ -36,7 +36,7 @@
               "env": ({ inventory_hostname: wg_public_key[0] } | to_json),
               "json": "{}",
               "password": ""
-            } | to_nice_json
+            }
           }}
 
     - name: Create WIREGUARD_KEYS variable group in Semaphore
