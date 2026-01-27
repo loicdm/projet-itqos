@@ -33,8 +33,7 @@
         body:
           name: "WIREGUARD_KEYS"
           project_id: "{{ project_id }}"
-          env: 
-            "core-2": "{{ wg_public_key[0] }}"
+          env: "{{ { server-public_key: wg_public_key[0] } | to_json }}"
           json: {}
           password: ""
         status_code: [200, 201]
