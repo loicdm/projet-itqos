@@ -10,8 +10,8 @@
     wg_edge_2_address: "{{ lookup('env','WG_EDGE_2_ADDRESS') }}"
     wg_edge_1_public_key: "{{ lookup('env','WG_EDGE_1_PUBLIC_KEY') }}"
     wg_edge_2_public_key: "{{ lookup('env','WG_EDGE_2_PUBLIC_KEY') }}"
-    lan_edge_1_address: "{{ lookup('env','LAN_EDGE_1_ADDRESS') }}"
-    lan_edge_2_address: "{{ lookup('env','LAN_EDGE_1_ADDRESS') }}"
+    lan_edge_1_network: "{{ lookup('env','LAN_EDGE_1_NETWORK') }}"
+    lan_edge_2_network: "{{ lookup('env','LAN_EDGE_2_NETWORK') }}"
     lan_mask: "{{ lookup('env','LAN_MASK') }}"
 
   tasks:
@@ -32,8 +32,8 @@
           - "set interfaces wireguard {{ wg_interface }} peer edge2 allowed-ips '{{ wg_edge_2_address }}/32'"
 
           # Edge-1 LAN
-          - "set interfaces wireguard {{ wg_interface }} peer edge1 allowed-ips '{{ lan_edge_1_address }}/{{ lan_mask }}'"
+          - "set interfaces wireguard {{ wg_interface }} peer edge1 allowed-ips '{{ lan_edge_1_network }}/{{ lan_mask }}'"
           # Edge-2 LAN
-          - "set interfaces wireguard {{ wg_interface }} peer edge2 allowed-ips '{{ lan_edge_2_address }}/{{ lan_mask }}'"
+          - "set interfaces wireguard {{ wg_interface }} peer edge2 allowed-ips '{{ lan_edge_2_network }}/{{ lan_mask }}'"
 
         save: true

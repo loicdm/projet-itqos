@@ -9,7 +9,7 @@
     wg_core_endpoint: "{{ lookup('env','WG_CORE_ENDPOINT') }}"
     wg_port: "{{ lookup('env','WG_PORT') }}"
     wg_network: "{{ lookup('env','WG_NETWORK') }}"
-    lan_edge_1_address: "{{ lookup('env','LAN_EDGE_1_ADDRESS') }}"
+    lan_edge_1_network: "{{ lookup('env','LAN_EDGE_1_NETWORK') }}"
     lan_mask: "{{ lookup('env','LAN_MASK') }}"
 
   tasks:
@@ -26,5 +26,5 @@
           - "set interfaces wireguard {{ wg_interface }} peer core allowed-ips '{{ wg_network }}/{{ wg_mask }}'"
           - "set interfaces wireguard {{ wg_interface }} peer core persistent-keepalive '25'"
           # Edge-1 LAN
-          - "set interfaces wireguard {{ wg_interface }} peer edge1 allowed-ips '{{ lan_edge_1_address }}/{{ lan_mask }}'"
+          - "set interfaces wireguard {{ wg_interface }} peer edge1 allowed-ips '{{ lan_edge_1_network }}/{{ lan_mask }}'"
         save: true
