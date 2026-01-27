@@ -15,6 +15,6 @@
           - "set protocols bgp parameters router-id {{ wg_edge_2_address }}"
           - "set protocols bgp neighbor {{ wg_core_address }} remote-as {{ bgp_as }}"
 
-          - "set protocols bgp network {{ lan_edge_2_network }}/{{ lan_mask }}"
+          - "set protocols bgp address-family ipv4-unicast network {{ lan_edge_2_network }}/{{ lan_mask }}"
 
         save: true
