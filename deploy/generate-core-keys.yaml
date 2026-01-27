@@ -34,6 +34,8 @@
           name: "WG_PUB_{{ inventory_hostname }}"
           value: "{{ wg_public_key }}"
           secret: false
+          project_id: "{{ project_id }}"
         status_code: [200, 201, 204]
+
     
 
