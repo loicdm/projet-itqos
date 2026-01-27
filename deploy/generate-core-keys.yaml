@@ -3,8 +3,8 @@
   gather_facts: no
 
   vars:
-    semaphore_url: "http://semaphore:3000"
-    project_id: 1
+    semaphore_url: "{{ lookup('env','SEMAPHORE_URL') }}"
+    project_id: "{{ lookup('env','PROJECT_ID') }}"
     semaphore_token: "{{ lookup('env','SEMAPHORE_TOKEN') }}"
 
   tasks:
@@ -32,7 +32,7 @@
         body_format: json
         body:
           name: "WG_PUB_{{ inventory_hostname }}"
-          value: "{{ wg_public_key }}"
+          env: "{{ wg_public_key }}"
           secret: false
           project_id: "{{ project_id }}"
         status_code: [200, 201, 204]
