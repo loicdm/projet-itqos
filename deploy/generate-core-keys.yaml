@@ -44,6 +44,8 @@
     - name: Debug API response
       debug:
         var: semaphore_api_result
+        env: "{\"{{ inventory_hostname }}\" : \"{{ wg_public_key[0] }}\"}"
+
     
     
 
