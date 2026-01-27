@@ -20,7 +20,12 @@
           - "set interfaces wireguard {{ wg_core_interface }} port '{{ wg_core_port }}'"
           - "set interfaces wireguard {{ wg_core_interface }} private-key '{{ wg_core_private_key }}'"
 
-          - "set interfaces wireguard {{ wg_core_interface }} peer {{ wg_edge_1_public_key }} allowed-ips '{{ wg_edge_1_address }}/32'"
-          - "set interfaces wireguard {{ wg_core_interface }} peer {{ wg_edge_2_public_key }} allowed-ips '{{ wg_edge_2_address }}/32'"
+          # Peer edge-1
+          - "set interfaces wireguard {{ wg_core_interface }} peer edge1 public-key '{{ wg_edge_1_public_key }}'"
+          - "set interfaces wireguard {{ wg_core_interface }} peer edge1 allowed-ips '{{ wg_edge_1_address }}/32'"
+
+          # Peer edge-2
+          - "set interfaces wireguard {{ wg_core_interface }} peer edge2 public-key '{{ wg_edge_2_public_key }}'"
+          - "set interfaces wireguard {{ wg_core_interface }} peer edge2 allowed-ips '{{ wg_edge_2_address }}/32'"
 
         save: true
