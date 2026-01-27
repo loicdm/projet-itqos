@@ -1,0 +1,6 @@
+- hosts: routers
+  gather_facts: no
+  tasks:
+    - name: Test Ansible connectivity
+      ping:
+
