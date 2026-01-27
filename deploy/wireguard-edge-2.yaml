@@ -1,0 +1,26 @@
+- hosts: edge-2
+  gather_facts: no
+  vars:
+    wg_interface: "{{ lookup('env','WG_EDGE_INTERFACE') }}"
+    wg_edge_2_address: "{{ lookup('env','WG_EDGE_2_ADDRESS') }}"
+    wg_mask: "{{ lookup('env','WG_MASK') }}"
+    wg_edge_2_private_key: "{{ lookup('env','WG_EDGE_2_PRIVATE_KEY') }}"
+    wg_core_public_key: "{{ lookup('env','WG_CORE_PUBLIC_KEY') }}"
+    wg_core_endpoint: "{{ lookup('env','WG_CORE_ENDPOINT') }}"
+    wg_port: "{{ lookup('env','WG_PORT') }}"
+    wg_network: "{{ lookup('env','WG_NETWORK') }}"
+
+  tasks:
+    - name: Configure WireGuard on edge-1
+      vyos.vyos.vyos_config:
+        lines:
+          - "set interfaces wireguard {{ wg_interface }} address '{{ wg_edge_2_address }}/{{ wg_mask }}'"
+          - "set interfaces wireguard {{ wg_interface }} description 'WIREGUARD'"
+          - "set interfaces wireguard {{ wg_interface }} private-key '{{ wg_edge_2_private_key }}'"
+
+          - "set interfaces wireguard {{ wg_interface }} peer core public-key '{{ wg_core_public_key }}'"
+          - "set interfaces wireguard {{ wg_interface }} peer core endpoint '{{ wg_core_endpoint }}:{{ wg_port }}'"
+          - "set interfaces wireguard {{ wg_interface }} peer core allowed-ips '{{ wg_network }}/{{ wg_mask }}'"
+          - "set interfaces wireguard {{ wg_interface }} peer core persistent-keepalive '25'"
+
+        save: true
