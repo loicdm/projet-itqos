@@ -1,7 +1,7 @@
 - hosts: core-1
   gather_facts: no
   vars:
-    wg_interface: "{{ lookup('env','WG_CORE_INTERFACE') }}"
+    wg_interface: "{{ lookup('env','WG_INTERFACE') }}"
     wg_core_address: "{{ lookup('env','WG_CORE_ADDRESS') }}"
     wg_mask: "{{ lookup('env','WG_MASK') }}"
     wg_port: "{{ lookup('env','WG_PORT') }}"
