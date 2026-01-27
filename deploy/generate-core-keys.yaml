@@ -21,24 +21,6 @@
       no_log: true
 
 
-    - name: Debug request body
-      debug:
-        msg: |
-          POST {{ semaphore_url }}/api/project/{{ project_id }}/environment
-          Headers:
-            Authorization: Bearer ****
-            Content-Type: application/json
-          Body:
-          {{
-            {
-              "name": "WIREGUARD_KEYS",
-              "project_id": project_id,
-              "env": ({ inventory_hostname: wg_public_key[0] } | to_json),
-              "json": "{}",
-              "password": ""
-            }
-          }}
-
     - name: Create WIREGUARD_KEYS variable group in Semaphore
       delegate_to: localhost
       uri:
@@ -52,7 +34,7 @@
         body:
           name: "WIREGUARD_KEYS"
           project_id: "{{ project_id }}"
-          env: "{{ { inventory_hostname: wg_public_key[0] } | to_json }}"
+          env: "{\"{{ inventory_hostname }}\" : \"{{ wg_public_key[0] }}\"}"
           json: "{}"
           password: ""
         status_code: [200, 201]
