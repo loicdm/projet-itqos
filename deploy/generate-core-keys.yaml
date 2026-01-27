@@ -20,7 +20,7 @@
         wg_public_key:  "{{ wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1') }}"
       no_log: true
 
-    - name: Store public key in Semaphore
+    - name: Create WIREGUARD_KEYS variable group in Semaphore
       delegate_to: localhost
       uri:
         url: "{{ semaphore_url }}/api/project/{{ project_id }}/environment"
@@ -31,11 +31,14 @@
           Accept: "application/json"
         body_format: json
         body:
-          - name: "WG_PUB_{{ inventory_hostname }}"
-            env: "{{ wg_public_key }}"
-            secret: false
-            project_id: "{{ project_id }}"
-        status_code: [200, 201, 204]
+          name: "WIREGUARD_KEYS"
+          project_id: "{{ project_id }}"
+          env: "{{ { inventory_hostname: wg_public_key } | to_json }}"
+          json: "{}"
+          password: ""
+        status_code: [200, 201]
+        return_content: true
+      register: semaphore_result
 
     
 
