@@ -17,5 +17,11 @@
           - "set protocols bgp neighbor {{ wg_edge_2_address }} remote-as {{ bgp_as }}"
           - "set protocols bgp neighbor {{ wg_edge_1_address }} address-family ipv4-unicast"
           - "set protocols bgp neighbor {{ wg_edge_2_address }} address-family ipv4-unicast"
+          - "set protocols bgp peer-group EDGES remote-as {{ bgp_as }}"
+          - "set protocols bgp peer-group EDGES address-family ipv4-unicast"
+          - "set protocols bgp neighbor {{ wg_edge_1_address }} peer-group 'EDGES'"
+          - "set protocols bgp neighbor {{ wg_edge_2_address }} peer-group 'EDGES'"
+          - "set protocols bgp peer-group EDGES address-family ipv4-unicast route-reflector-client"
+          - "set protocols bgp peer-group EDGES address-family ipv4-unicast next-hop-self"
 
         save: true
