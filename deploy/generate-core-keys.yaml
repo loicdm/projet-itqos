@@ -20,6 +20,15 @@
         wg_public_key: "{{ wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1') }}"
       no_log: false
 
+    - name: Debug request body
+      debug:
+        msg:
+          name: "WIREGUARD_KEYS"
+          project_id: "{{ project_id }}"
+          env: "{ {{ { inventory_hostname: wg_public_key[0] } | to_json }} }"
+          json: "{}"
+          password: ""
+
     - name: Create WIREGUARD_KEYS variable group in Semaphore
       delegate_to: localhost
       uri:
