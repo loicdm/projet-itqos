@@ -7,6 +7,7 @@
     lan_edge_1_dhcp_range_start: "{{ lookup('env','LAN_EDGE_1_DHCP_RANGE_START') }}"
     lan_edge_1_dhcp_range_end: "{{ lookup('env','LAN_EDGE_1_DHCP_RANGE_END') }}"
     dns_server: "{{ lookup('env','DNS_SERVER') }}"
+    lan_edge_1_subnet_id: "{{ lookup('env','LAN_EDGE_1_SUBNET_ID') }}"
 
   tasks:
     - name: Configure LAN interface on edge-1
@@ -15,11 +16,14 @@
           - "set interfaces ethernet eth1 address '{{ lan_edge_1_address }}/{{ lan_mask }}'"
         save: true
 
-    - name: Configure DHCP server on edge-1
+    - name: Configure DHCP server on edge-1 (Kea)
       vyos.vyos.vyos_config:
         lines:
-          - "set service dhcp-server shared-network-name LAN1 subnet {{ lan_edge_1_network }}/{{ lan_mask }} router {{ lan_edge_1_address }}"
-          - "set service dhcp-server shared-network-name LAN1 subnet {{ lan_edge_1_network }}/{{ lan_mask }} dns-server {{ dns_server }}"
+          - "set service dhcp-server shared-network-name LAN1 authoritative"
+          - "set service dhcp-server shared-network-name LAN1 subnet {{ lan_edge_1_network }}/{{ lan_mask }} subnet-id {{ lan_edge_1_subnet_id }}"
+          - "set service dhcp-server shared-network-name LAN1 subnet {{ lan_edge_1_network }}/{{ lan_mask }} option default-router {{ lan_edge_1_address }}"
+          - "set service dhcp-server shared-network-name LAN1 subnet {{ lan_edge_1_network }}/{{ lan_mask }} option name-server {{ dns_server }}"
+
           - "set service dhcp-server shared-network-name LAN1 subnet {{ lan_edge_1_network }}/{{ lan_mask }} range 0 start {{ lan_edge_1_dhcp_range_start }}"
           - "set service dhcp-server shared-network-name LAN1 subnet {{ lan_edge_1_network }}/{{ lan_mask }} range 0 stop {{ lan_edge_1_dhcp_range_end }}"
         save: true
