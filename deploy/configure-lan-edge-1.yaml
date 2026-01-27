@@ -16,7 +16,7 @@
           - "set interfaces ethernet eth1 address '{{ lan_edge_1_address }}/{{ lan_mask }}'"
         save: true
 
-    - name: Configure DHCP server on edge-1 (Kea)
+    - name: Configure DHCP server on edge-1
       vyos.vyos.vyos_config:
         lines:
           - "set service dhcp-server shared-network-name LAN1 authoritative"
