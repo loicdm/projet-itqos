@@ -1,7 +1,6 @@
-- hosts: core-2
+- hosts: all
   gather_facts: no
   tasks:
-
     - name: Generate WG keys
       vyos_command:
         commands: generate pki wireguard key-pair
@@ -10,7 +9,7 @@
     - name: Parse keys
       set_fact:
         wg_private_key: "{{ wg_out.stdout[0] | regex_search('Private key: ([A-Za-z0-9+/=]+)', '\\1') }}"
-        wg_public_key:  "{{ wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1') }}"
+        wg_public_key: "{{ wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1') }}"
 
     - debug:
         msg:
