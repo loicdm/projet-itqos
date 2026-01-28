@@ -40,6 +40,8 @@
       delegate_facts: true
 
     - name: "Configure WireGuard on {{ edge }}"
+      vars:
+        wg_edge_private_key: "{{ hostvars['localhost'].wg_edge_private__key }}"
       vyos.vyos.vyos_config:
         lines:
           - "set interfaces wireguard {{ wg_interface }} address '{{ wg_edge_address }}/{{ wg_mask }}'"
