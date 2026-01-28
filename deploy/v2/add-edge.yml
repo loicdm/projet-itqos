@@ -2,11 +2,11 @@
   hosts: "{{ edge }}"
   gather_facts: no
   tasks:
-    - name: Mark play as executed
-      set_stats:
-        data:
-          edge_executed: true
-        aggregate: true
+    - name: Mark edge play as executed
+      set_fact:
+        edge_executed: true
+      delegate_to: localhost
+      delegate_facts: true
       run_once: true
 
     - name: "Configure LAN interface on {{ edge }}"
@@ -84,7 +84,7 @@
   pre_tasks:
     - name: Stop play if edge was skipped
       meta: end_play
-      when: not (ansible_stats.data.edge_executed | default(false))
+      when: not (hostvars['localhost'].edge_executed | default(false))
   tasks:
     - name: "Add {{ edge }} peer on {{ core }} WireGuard configuration"
       vyos.vyos.vyos_config:
