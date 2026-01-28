@@ -5,25 +5,25 @@
     - name: "Configure LAN interface on {{ edge }}"
       vyos.vyos.vyos_config:
         lines:
-          - "set interfaces ethernet eth1 address '{{ lan_edge_address }}/{{ lan_mask }}'"
+          - "set interfaces ethernet {{ lan_interface }} address '{{ lan_address }}/{{ lan_mask }}'"
         save: true
 
     - name: "Configure DHCP server on {{ edge }}"
       vyos.vyos.vyos_config:
         lines:
           - "set service dhcp-server shared-network-name LAN authoritative"
-          - "set service dhcp-server shared-network-name LAN subnet {{ lan_edge_network }}/{{ lan_mask }} subnet-id {{ lan_edge_subnet_id }}"
-          - "set service dhcp-server shared-network-name LAN subnet {{ lan_edge_network }}/{{ lan_mask }} option default-router {{ lan_edge_address }}"
-          - "set service dhcp-server shared-network-name LAN subnet {{ lan_edge_network }}/{{ lan_mask }} option name-server {{ dns_server }}"
-          - "set service dhcp-server shared-network-name LAN subnet {{ lan_edge_network }}/{{ lan_mask }} range 0 start {{ lan_edge_dhcp_range_start }}"
-          - "set service dhcp-server shared-network-name LAN subnet {{ lan_edge_network }}/{{ lan_mask }} range 0 stop {{ lan_edge_dhcp_range_end }}"
+          - "set service dhcp-server shared-network-name LAN subnet {{ lan_network }}/{{ lan_mask }} subnet-id {{ lan_subnet_id }}"
+          - "set service dhcp-server shared-network-name LAN subnet {{ lan_network }}/{{ lan_mask }} option default-router {{ lan_address }}"
+          - "set service dhcp-server shared-network-name LAN subnet {{ lan_network }}/{{ lan_mask }} option name-server {{ dns_server }}"
+          - "set service dhcp-server shared-network-name LAN subnet {{ lan_network }}/{{ lan_mask }} range 0 start {{ lan_dhcp_range_start }}"
+          - "set service dhcp-server shared-network-name LAN subnet {{ lan_network }}/{{ lan_mask }} range 0 stop {{ lan_dhcp_range_end }}"
         save: true
 
     - name: "Configure NAT for LAN clients on {{ edge }}"
       vyos.vyos.vyos_config:
         lines:
-          - "set nat source rule 100 outbound-interface name eth0"
-          - "set nat source rule 100 source address {{ lan_edge_network }}/{{ lan_mask }}"
+          - "set nat source rule 100 outbound-interface name {{ wan_interface }}"
+          - "set nat source rule 100 source address {{ lan_network }}/{{ lan_mask }}"
           - "set nat source rule 100 translation address masquerade"
         save: true
 
@@ -52,7 +52,7 @@
           - "set protocols bgp neighbor {{ wg_core_address }} remote-as {{ bgp_as }}"
           - "set protocols bgp neighbor {{ wg_core_address }} address-family ipv4-unicast"
           # Advertise local LAN
-          - "set protocols bgp address-family ipv4-unicast network {{ lan_edge_network }}/{{ lan_mask }}"
+          - "set protocols bgp address-family ipv4-unicast network {{ lan_network }}/{{ lan_mask }}"
         save: true
 
 - name: "Ajout des configurations sur {{ core }}"
@@ -62,10 +62,10 @@
     - name: "Add {{ edge }} peer on {{ core }} WireGuard configuration"
       vyos.vyos.vyos_config:
         lines:
-          - "set interfaces wireguard {{ wg_interface }} peer {{ edge }} public-key '{{ wg_edge_public_key }}'"
-          - "set interfaces wireguard {{ wg_interface }} peer {{ edge }} allowed-ips '{{ wg_edge_address }}/32'"
+          - "set interfaces wireguard {{ wg_core_interface }} peer {{ edge }} public-key '{{ wg_edge_public_key }}'"
+          - "set interfaces wireguard {{ wg_core_interface }} peer {{ edge }} allowed-ips '{{ wg_edge_address }}/32'"
           # Edge-1 LAN
-          - "set interfaces wireguard {{ wg_interface }} peer {{ edge }} allowed-ips '{{ lan_edge_network }}/{{ lan_mask }}'"
+          - "set interfaces wireguard {{ wg_core_interface }} peer {{ edge }} allowed-ips '{{ lan_network }}/{{ lan_mask }}'"
         save: true
 
     - name: "Add {{ edge }} BGP configurations on {{ core }}"

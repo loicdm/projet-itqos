@@ -30,3 +30,15 @@ all:
               ansible_network_os: vyos
               ansible_user: vyos
               ansible_password: vyos
+            edge-3:
+              ansible_connection: network_cli
+              ansible_host: 10.0.0.103
+              ansible_network_os: vyos
+              ansible_user: vyos
+              ansible_password: vyos
+            edge-4:
+              ansible_connection: network_cli
+              ansible_host: 10.0.0.104
+              ansible_network_os: vyos
+              ansible_user: vyos
+              ansible_password: vyos
