@@ -4,6 +4,6 @@
     - name: "Removing shaper {{ name }} on {{ host }} interface : {{ interface }}"
       vyos.vyos.vyos_config:
         lines:
-          - "delete qos interface {{ interface }} egress {{ name }}"
+          - "delete qos interface {{ interface }} {{ direction }} {{ name }}"
           - "delete qos policy shaper {{ name }}"
         save: true

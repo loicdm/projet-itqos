@@ -7,5 +7,5 @@
           - "set qos policy cake {{ name }} bandwidth {{ rate }}mbit"
           - "set qos policy cake {{ name }} ack-filter"
           - "set qos policy cake {{ name }} flow-isolation-nat"
-          - "set qos interface {{ interface }} egress {{ name }}"
+          - "set qos interface {{ interface }} {{ direction }} {{ name }}"
         save: true
