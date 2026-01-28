@@ -1,0 +1,18 @@
+- hosts: "{{ core }}"
+  gather_facts: no
+  tasks:
+    - name: "Configure WireGuard on {{ core }}"
+      vyos.vyos.vyos_config:
+        lines:
+          - "set interfaces wireguard {{ wg_interface }} address '{{ wg_address }}/{{ wg_mask }}'"
+          - "set interfaces wireguard {{ wg_interface }} description 'WIREGUARD'"
+          - "set interfaces wireguard {{ wg_interface }} port '{{ wg_port }}'"
+          - "set interfaces wireguard {{ wg_interface }} private-key '{{ wg_private_key }}'"
+        save: true
+
+    - name: "Configure BGP on {{ core }}"
+      vyos.vyos.vyos_config:
+        lines:
+          - "set protocols bgp system-as {{ bgp_as }}"
+          - "set protocols bgp parameters router-id {{ wg_address }}"
+        save: true

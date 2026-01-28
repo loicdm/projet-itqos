@@ -10,6 +10,12 @@ all:
               ansible_network_os: vyos
               ansible_user: vyos
               ansible_password: vyos
+            core-2:
+              ansible_connection: network_cli
+              ansible_host: 10.0.0.12
+              ansible_network_os: vyos
+              ansible_user: vyos
+              ansible_password: vyos
         edges:
           hosts:
             edge-1:
