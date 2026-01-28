@@ -22,7 +22,7 @@ all:
       children:
         cores:
           hosts:
-            core-1:
+            core:
               ansible_host: 10.0.0.11
               wg_address: 10.100.0.1
               wg_private_key: "WGr686AMMt6FxsqeD/7c/NpDRQ33lbgP7P//hkxzB14="
