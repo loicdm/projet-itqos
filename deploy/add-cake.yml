@@ -1,0 +1,11 @@
+- hosts: "{{ host }}"
+  gather_facts: no
+  tasks:
+    - name: "Configure qos cake {{ name }} on {{ host }} wireguard interface : {{ wg_interface }}"
+      vyos.vyos.vyos_config:
+        lines:
+          - "set qos policy cake {{ name }} bandwidth {{ rate }}mbit"
+          - "set qos policy cake {{ name }} diffserv diffserv4"
+          - "set qos policy cake {{ name }} nat enable"
+          - "set qos interface {{ wg_interface }} egress {{ name }}"
+        save: true

@@ -1,0 +1,9 @@
+- hosts: "{{ host }}"
+  gather_facts: no
+  tasks:
+    - name: "Removing shaper {{ name }} on {{ host }} wireguard interface : {{ wg_interface }}"
+      vyos.vyos.vyos_config:
+        lines:
+          - "delete qos interface {{ wg_interface }} egress {{ name }}"
+          - "delete qos policy shaper {{ name }}"
+        save: true

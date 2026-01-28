@@ -1,0 +1,9 @@
+- hosts: "{{ host }}"
+  gather_facts: no
+  tasks:
+    - name: "Configure shaper {{ name }} on {{ host }} wireguard interface : {{ wg_interface }}"
+      vyos.vyos.vyos_config:
+        lines:
+          - "set qos policy shaper {{ name }} default bandwidth {{ rate }}mbit"
+          - "set qos interface {{ wg_interface }} egress {{ name }}"
+        save: true
