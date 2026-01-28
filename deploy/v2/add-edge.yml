@@ -27,6 +27,16 @@
           - "set nat source rule 100 translation address masquerade"
         save: true
 
+    - name: "Generate WG keys for {{ edge }}"
+      vyos_command:
+        commands: generate pki wireguard key-pair
+      register: wg_out
+
+    - name: "Parse WG keys for {{ edge }}"
+      set_fact:
+        wg_edge_private_key: "{{ (wg_out.stdout[0] | regex_search('Private key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
+        wg_edge_public_key: "{{ (wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
+
     - name: "Configure WireGuard on {{ edge }}"
       vyos.vyos.vyos_config:
         lines:
