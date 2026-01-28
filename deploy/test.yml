@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: "{{ host }}"
   gather_facts: no
   tasks:
     - name: print var
