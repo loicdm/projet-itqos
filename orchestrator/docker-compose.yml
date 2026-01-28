@@ -1,0 +1,54 @@
+services:
+  mysql:
+    restart: unless-stopped
+    image: mysql:8.0
+    hostname: mysql
+    volumes:
+      - semaphore-mysql:/var/lib/mysql
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_DATABASE: semaphore
+      MYSQL_USER: semaphore
+      MYSQL_PASSWORD: semaphore
+
+  semaphore:
+    restart: always
+    ports:
+      - 80:3000
+    image: semaphoreui/semaphore:v2.16.51
+    environment:
+      SEMAPHORE_DB_USER: semaphore
+      SEMAPHORE_DB_PASS: semaphore
+      SEMAPHORE_DB_HOST: mysql # for postgres, change to: postgres
+      SEMAPHORE_DB_PORT: 3306 # change to 5432 for postgres
+      SEMAPHORE_DB_DIALECT: mysql # for postgres, change to: postgres
+      SEMAPHORE_DB: semaphore
+      SEMAPHORE_CONFIG_PATH: "/etc/semaphore"
+      SEMAPHORE_PLAYBOOK_PATH: "/tmp/semaphore/"
+      SEMAPHORE_ADMIN: orchestrator
+      SEMAPHORE_ADMIN_PASSWORD: password
+      SEMAPHORE_ADMIN_NAME: orchestrator
+      SEMAPHORE_ADMIN_EMAIL: admin@localhost
+      SEMAPHORE_USE_REMOTE_RUNNER: "True"
+      SEMAPHORE_RUNNER_REGISTRATION_TOKEN: "gqG6nJaXflEkQpm4//2m6Y+nFYe0uaNyJ8SDRoVOf3I="
+      TZ: "Europe/Paris"
+    volumes:
+      - ./requirements.txt:/etc/semaphore/requirements.txt
+    depends_on:
+      - mysql
+
+  semaphore-runner:
+    restart: always
+    image: semaphoreui/runner:v2.16.51
+    environment:
+      SEMAPHORE_RUNNER_PRIVATE_KEY_FILE: /var/lib/semaphore/runner.key
+      SEMAPHORE_WEB_ROOT: http://semaphore:3000
+      SEMAPHORE_CONFIG_PATH: "/etc/semaphore"
+      SEMAPHORE_RUNNER_REGISTRATION_TOKEN: "gqG6nJaXflEkQpm4//2m6Y+nFYe0uaNyJ8SDRoVOf3I="
+      TZ: "Europe/Paris"
+
+    volumes:
+      - ./requirements.txt:/etc/semaphore/requirements.txt
+
+volumes:
+  semaphore-mysql:

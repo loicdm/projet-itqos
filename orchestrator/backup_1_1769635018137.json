@@ -1,0 +1,137 @@
+{
+  "environments": [
+    {
+      "env": "{\"CORE_2_PRIVATE_KEY\":\"6L4/crCO7wrFBQkbTrkeoKkLtMploigBMEcBCOjOz14=\",\"CORE_2_PUBLIC_KEY\":\"QctPHaofnZvVsPgN5G8JefsFnY47+q+RAkjEo9GyJEg=\"}",
+      "json": "{}",
+      "name": "CORE 2 WG KEYS"
+    },
+    {
+      "json": "{}",
+      "name": "Empty"
+    },
+    {
+      "env": "{\"WG_INTERFACE\":\"wg0\",\"WG_CORE_ADDRESS\":\"10.100.0.1\",\"WG_MASK\":\"24\",\"WG_PORT\":\"51820\",\"WG_CORE_PRIVATE_KEY\":\"wHZHN+p+n+bCOmGXj0gVFpypHDJXtfPi3Ty4PHCppHQ=\",\"WG_CORE_PUBLIC_KEY\":\"j1QuR8LrVtGigtbrPQogvvqqpvuMCjIa/DE2Yp02b0U=\",\"WG_EDGE_1_ADDRESS\":\"10.100.0.2\",\"WG_EDGE_2_ADDRESS\":\"10.100.0.3\",\"WG_EDGE_1_PRIVATE_KEY\":\"iFhSNavZkxx5TJitvPvreI/4rpz2g35v1vDsKtSc6kU=\",\"WG_EDGE_1_PUBLIC_KEY\":\"MT+J8+KAZsQbY3A6VmPRjoVMLRA+3pxnxNtpinONhTY=\",\"WG_EDGE_2_PRIVATE_KEY\":\"ELH1EEn/+ezwhCt9Durg1L0j92qNoUA0ae04S7964UY=\",\"WG_EDGE_2_PUBLIC_KEY\":\"pOIHvPKsWj/T7BYoPgA3ZHsi9CKQVy9utszAn8etVmc=\",\"WG_NETWORK\":\"10.100.0.0\",\"WG_CORE_ENDPOINT\":\"10.0.0.11\",\"LAN_EDGE_1_ADDRESS\":\"192.168.10.1\",\"LAN_EDGE_1_NETWORK\":\"192.168.10.0\",\"LAN_EDGE_2_ADDRESS\":\"192.168.20.1\",\"LAN_EDGE_2_NETWORK\":\"192.168.20.0\",\"LAN_MASK\":\"24\",\"BGP_AS\":\"65000\",\"LAN_EDGE_1_DHCP_RANGE_START\":\"192.168.10.100\",\"LAN_EDGE_1_DHCP_RANGE_END\":\"192.168.10.200\",\"LAN_EDGE_2_DHCP_RANGE_START\":\"192.168.20.100\",\"LAN_EDGE_2_DHCP_RANGE_END\":\"192.168.20.200\",\"DNS_SERVER\":\"1.1.1.1\",\"LAN_EDGE_1_SUBNET_ID\":\"10\",\"LAN_EDGE_2_SUBNET_ID\":\"20\"}",
+      "json": "{}",
+      "name": "SDWAN_VARS"
+    }
+  ],
+  "integration_aliases": [],
+  "integrations": [],
+  "inventories": [
+    {
+      "become_key": "vyos",
+      "inventory": "inventory.yaml",
+      "name": "routers",
+      "ssh_key": "loicdm",
+      "type": "file"
+    },
+    {
+      "become_key": "vyos",
+      "inventory": "all:\n  children:\n    routers:\n      vars:\n        ansible_connection: network_cli\n        ansible_network_os: vyos\n        ansible_user: vyos\n        ansible_password: vyos\n      children:\n        cores:\n          hosts:\n            core-1:\n              ansible_host: 10.0.0.11\n            core-2:\n              ansible_host: 10.0.0.12\n        edges:\n          hosts:\n            edge-1:\n              ansible_host: 10.0.0.101\n            edge-2:\n              ansible_host: 10.0.0.102\n            edge-3:\n              ansible_host: 10.0.0.103\n            edge-4:\n              ansible_host: 10.0.0.104\n            edge-5:\n              ansible_host: 10.0.0.105",
+      "name": "routers-local",
+      "ssh_key": "vyos",
+      "type": "static-yaml"
+    }
+  ],
+  "keys": [
+    {
+      "name": "loicdm",
+      "owner": "",
+      "type": "ssh"
+    },
+    {
+      "name": "None",
+      "owner": "",
+      "type": "none"
+    },
+    {
+      "name": "vyos",
+      "owner": "",
+      "type": "login_password"
+    }
+  ],
+  "meta": {
+    "alert": false,
+    "max_parallel_tasks": 0,
+    "name": "sdwan",
+    "type": ""
+  },
+  "repositories": [
+    {
+      "git_branch": "main",
+      "git_url": "git@github.com:loicdm/projet-itqos.git",
+      "name": "projet-itqos.git",
+      "ssh_key": "loicdm"
+    }
+  ],
+  "schedules": [],
+  "secret_storages": [],
+  "templates": [
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "add-edge",
+      "playbook": "deploy/add-edge.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "edge-1",
+          "description": "hostname of edge in inventory.yaml",
+          "name": "edge",
+          "required": true,
+          "title": "Edge Host :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "core-1",
+          "description": "Core hostname in inventory.yaml",
+          "name": "core",
+          "required": true,
+          "title": "Core Host :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": []
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "setup-core",
+      "playbook": "deploy/setup-core.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "core-1",
+          "description": "name of core in ansible inventory",
+          "name": "core",
+          "required": true,
+          "title": "core host :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": []
+    }
+  ],
+  "views": []
+}
