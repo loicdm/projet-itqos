@@ -25,8 +25,8 @@ all:
             core:
               ansible_host: 10.0.0.11
               wg_address: 10.100.0.1
-              wg_private_key: "WGr686AMMt6FxsqeD/7c/NpDRQ33lbgP7P//hkxzB14="
-              wg_public_key: "Iin4E97CUucjG5IdhEi4NTEFNc1om9JhBlgDvoEhNFE="
+              wg_private_key: "0KMpR7UmOlVAVdUVqHaQhyiPQOyk3WYJ7cuNMZ10s2Q="
+              wg_public_key: "0SxFufnxrphmH0oGS90YlT5iFPEPccNBGcDuRnM/sBU="
         edges:
           hosts:
             edge-1:

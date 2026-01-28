@@ -54,7 +54,7 @@
           - "set interfaces wireguard {{ wg_interface }} address '{{ wg_address }}/{{ wg_mask }}'"
           - "set interfaces wireguard {{ wg_interface }} description 'WIREGUARD'"
           - "set interfaces wireguard {{ wg_interface }} private-key '{{ wg_edge_private_key }}'"
-          - "set interfaces wireguard {{ wg_interface }} peer core public-key '{{ wg_core_public_key }}'"
+          - "set interfaces wireguard {{ wg_interface }} peer core public-key '{{ hostvars[core].wg_public_key }}'"
           - "set interfaces wireguard {{ wg_interface }} peer core address '{{ hostvars[core].ansible_host }}'"
           - "set interfaces wireguard {{ wg_interface }} peer core port '{{ wg_port }}'"
           - "set interfaces wireguard {{ wg_interface }} peer core allowed-ips '{{ wg_network }}/{{ wg_mask }}'"
