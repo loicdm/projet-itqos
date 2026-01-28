@@ -36,6 +36,8 @@
       set_fact:
         wg_edge_private_key: "{{ (wg_out.stdout[0] | regex_search('Private key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
         wg_edge_public_key: "{{ (wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
+      delegate_to: localhost
+      delegate_facts: true
 
     - name: "Configure WireGuard on {{ edge }}"
       vyos.vyos.vyos_config:
@@ -68,6 +70,8 @@
 - name: "Ajout des configurations sur {{ core }}"
   hosts: "{{ core }}"
   gather_facts: no
+  vars:
+    wg_edge_public_key: "{{ hostvars['localhost'].wg_edge_public_key }}"
   tasks:
     - name: "Add {{ edge }} peer on {{ core }} WireGuard configuration"
       vyos.vyos.vyos_config:
