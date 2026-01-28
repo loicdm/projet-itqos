@@ -1,44 +1,27 @@
 all:
   children:
     routers:
+      vars:
+        ansible_connection: network_cli
+        ansible_network_os: vyos
+        ansible_user: vyos
+        ansible_password: vyos
       children:
         cores:
           hosts:
             core-1:
-              ansible_connection: network_cli
               ansible_host: 10.0.0.11
-              ansible_network_os: vyos
-              ansible_user: vyos
-              ansible_password: vyos
             core-2:
-              ansible_connection: network_cli
               ansible_host: 10.0.0.12
-              ansible_network_os: vyos
-              ansible_user: vyos
-              ansible_password: vyos
         edges:
           hosts:
             edge-1:
-              ansible_connection: network_cli
               ansible_host: 10.0.0.101
-              ansible_network_os: vyos
-              ansible_user: vyos
-              ansible_password: vyos
             edge-2:
-              ansible_connection: network_cli
               ansible_host: 10.0.0.102
-              ansible_network_os: vyos
-              ansible_user: vyos
-              ansible_password: vyos
             edge-3:
-              ansible_connection: network_cli
               ansible_host: 10.0.0.103
-              ansible_network_os: vyos
-              ansible_user: vyos
-              ansible_password: vyos
             edge-4:
-              ansible_connection: network_cli
               ansible_host: 10.0.0.104
-              ansible_network_os: vyos
-              ansible_user: vyos
-              ansible_password: vyos
+            edge-5:
+              ansible_host: 10.0.0.105
