@@ -1,6 +1,16 @@
 - hosts: "{{ core }}"
   gather_facts: no
   tasks:
+    - name: "Generate WG keys for {{ core }}"
+      vyos_command:
+        commands: generate pki wireguard key-pair
+      register: wg_out
+
+    - name: "Parse WG keys for {{ core }}"
+      set_fact:
+        wg_private_key: "{{ (wg_out.stdout[0] | regex_search('Private key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
+        wg_public_key: "{{ (wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
+
     - name: "Configure WireGuard on {{ core }}"
       vyos.vyos.vyos_config:
         lines:
@@ -16,3 +26,9 @@
           - "set protocols bgp system-as {{ bgp_as }}"
           - "set protocols bgp parameters router-id {{ wg_address }}"
         save: true
+
+    - debug:
+        msg:
+          - "!!!!! SAVE THIS FOR LATER !!!!!"
+          - "WG_PRIVATE_KEY: {{ wg_private_key }}"
+          - "WG_PUBLIC_KEY:  {{ wg_public_key }}"
