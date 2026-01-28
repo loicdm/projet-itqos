@@ -1,35 +1,17 @@
 - hosts: all
   gather_facts: no
   tasks:
-    - name: Generate core WG keys
+    - name: Generate WG keys
       vyos_command:
         commands: generate pki wireguard key-pair
-      register: wg_core_out
-
-    - name: Generate edge-1 WG keys
-      vyos_command:
-        commands: generate pki wireguard key-pair
-      register: wg_edge_1_out
-
-    - name: Generate edge-2 WG keys
-      vyos_command:
-        commands: generate pki wireguard key-pair
-      register: wg_edge_2_out
+      register: wg_out
 
     - name: Parse keys
       set_fact:
-        wg_core_private_key: "{{ wg_core_out.stdout[0] | regex_search('Private key: ([A-Za-z0-9+/=]+)', '\\1') }}"
-        wg_core_public_key: "{{ wg_core_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1') }}"
-        wg_edge_1_private_key: "{{ wg_edge_1_out.stdout[0] | regex_search('Private key: ([A-Za-z0-9+/=]+)', '\\1') }}"
-        wg_edge_1_public_key: "{{ wg_edge_1_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1') }}"
-        wg_edge_2_private_key: "{{ wg_edge_2_out.stdout[0] | regex_search('Private key: ([A-Za-z0-9+/=]+)', '\\1') }}"
-        wg_edge_2_public_key: "{{ wg_edge_2_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1') }}"
+        wg_private_key: "{{ wg_out.stdout[0] | regex_search('Private key: ([A-Za-z0-9+/=]+)', '\\1') }}"
+        wg_public_key: "{{ wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1') }}"
 
     - debug:
         msg:
-          - "WG_CORE_PRIVATE_KEY: {{ wg_core_private_key[0] }}"
-          - "WG_CORE_PUBLIC_KEY:  {{ wg_core_public_key[0] }}"
-          - "WG_EDGE_1_PRIVATE_KEY: {{ wg_edge_1_private_key[0] }}"
-          - "WG_EDGE_1_PUBLIC_KEY:  {{ wg_edge_1_public_key[0] }}"
-          - "WG_EDGE_2_PRIVATE_KEY: {{ wg_edge_2_private_key[0] }}"
-          - "WG_EDGE_2_PUBLIC_KEY:  {{ wg_edge_2_public_key[0] }}"
+          - "WG_PRIVATE_KEY: {{ wg_private_key[0] }}"
+          - "WG_PUBLIC_KEY:  {{ wg_public_key[0] }}"

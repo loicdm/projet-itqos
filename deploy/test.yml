@@ -1,0 +1,6 @@
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: print var
+      debug:
+        msg: VAR HOST is = {{ host }}
