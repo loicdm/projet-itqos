@@ -9,22 +9,49 @@ all:
         ansible_network_os: vyos
         ansible_user: vyos
         ansible_password: vyos
+        wg_interface: wg0
+        wg_network: 10.100.0.0
+        wg_mask: 24
+        wg_port: 51820
+        bgp_as: 65000
+        dns_server: 1.1.1.1
+        lan_interface: eth1
+        lan_mask: 24
+        wan_interface: eth0
+
       children:
         cores:
           hosts:
             core-1:
               ansible_host: 10.0.0.11
-            core-2:
-              ansible_host: 10.0.0.12
+              wg_address: 10.100.0.1
+              wg_private_key: "WGr686AMMt6FxsqeD/7c/NpDRQ33lbgP7P//hkxzB14="
+              wg_public_key: "Iin4E97CUucjG5IdhEi4NTEFNc1om9JhBlgDvoEhNFE="
         edges:
           hosts:
             edge-1:
               ansible_host: 10.0.0.101
+              wg_address: 10.100.0.2
+              lan_address: 192.168.10.1
+              lan_network: 192.168.10.0
+              lan_dhcp_range_start: 192.168.10.2
+              lan_dhcp_range_end: 192.168.10.254
+              lan_subnet_id: 10
+
             edge-2:
               ansible_host: 10.0.0.102
+              wg_address: 10.100.0.3
+              lan_address: 192.168.20.1
+              lan_network: 192.168.20.0
+              lan_dhcp_range_start: 192.168.20.2
+              lan_dhcp_range_end: 192.168.20.254
+              lan_subnet_id: 20
+
             edge-3:
               ansible_host: 10.0.0.103
-            edge-4:
-              ansible_host: 10.0.0.104
-            edge-5:
-              ansible_host: 10.0.0.105
+              wg_address: 10.100.0.4
+              lan_address: 192.168.30.1
+              lan_network: 192.168.30.0
+              lan_dhcp_range_start: 192.168.30.2
+              lan_dhcp_range_end: 192.168.30.254
+              lan_subnet_id: 30
