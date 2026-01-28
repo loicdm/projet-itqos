@@ -4,6 +4,6 @@
     - name: "Configure shaper '{{ name }}' on {{ host }} interface : {{ interface }}"
       vyos.vyos.vyos_config:
         lines:
-          - "set qos policy shaper '{{ name }}' default bandwidth {{ rate }}mbit"
-          - "set qos interface {{ interface }} egress '{{ name }}'"
+          - "set qos policy limiter '{{ name }}' default bandwidth {{ rate }}mbit"
+          - "set qos interface {{ interface }} ingress '{{ name }}'"
         save: true

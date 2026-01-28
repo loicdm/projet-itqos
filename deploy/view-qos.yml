@@ -1,0 +1,10 @@
+- hosts: "{{ host }}"
+  gather_facts: no
+  tasks:
+    - name: "View qos on {{ host }}"
+      vyos.vyos.vyos_command:
+        commands:
+          - show qos
+      register: qos
+    - debug:
+        var: qos.stdout[0]

@@ -1,11 +1,11 @@
 - hosts: "{{ host }}"
   gather_facts: no
   tasks:
-    - name: "Configure qos cake {{ name }} on {{ host }} interface : {{ interface }}"
+    - name: "Configure qos cake '{{ name }}' on {{ host }} interface : {{ interface }}"
       vyos.vyos.vyos_config:
         lines:
-          - "set qos policy cake {{ name }} bandwidth {{ rate }}mbit"
-          - "set qos policy cake {{ name }} ack-filter"
-          - "set qos policy cake {{ name }} flow-isolation-nat"
-          - "set qos interface {{ interface }} {{ direction }} {{ name }}"
+          - "set qos policy cake '{{ name }}' bandwidth {{ rate }}mbit"
+          - "set qos policy cake '{{ name }}' ack-filter"
+          - "set qos policy cake '{{ name }}' flow-isolation-nat"
+          - "set qos interface {{ interface }} egress '{{ name }}'"
         save: true
