@@ -52,6 +52,12 @@
           - "delete interfaces ethernet {{ lan_interface }} address {{ lan_address }}/{{ lan_mask }}"
         save: true
 
+    - name: Remove route for internet traffic
+      vyos.vyos.vyos_config:
+        lines:
+          - "delete protocols static route 0.0.0.0/0 next-hop {{ internet_gateway }}"
+        save: true
+
 ########################################
 # Remove edges from core
 ########################################
