@@ -8,10 +8,10 @@
   tasks:
     - name: "Compute class bandwidths"
       set_fact:
-        bw_ef: "{{ (rate * percent_ef / 100.0) | round(0, 'floor') | int }}"
-        bw_af41: "{{ (rate * percent_af41   / 100.0) | round(0, 'floor') | int }}"
-        bw_be: "{{ (rate * percent_be   / 100.0) | round(0, 'floor') | int }}"
-        bw_cs1: "{{ rate - (bw_ef + bw_af41 + bw_be) }}"
+        bw_ef: "{{ ((rate | int) * percent_ef / 100.0) | round(0, 'floor') | int }}"
+        bw_af41: "{{ ((rate | int) * percent_af41   / 100.0) | round(0, 'floor') | int }}"
+        bw_be: "{{ ((rate | int) * percent_be   / 100.0) | round(0, 'floor') | int }}"
+        bw_cs1: "{{ (rate | int) - (bw_ef + bw_af41 + bw_be) }}"
 
     - name: "Add shaper SHAPERDSCP on {{ host }} interface {{ interface }}"
       vyos.vyos.vyos_config:
