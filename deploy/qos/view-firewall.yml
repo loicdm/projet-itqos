@@ -4,10 +4,10 @@
     - name: "View firewall on {{ host }}"
       vyos.vyos.vyos_command:
         commands:
-          - configure
+          #- configure
           - show firewall
-          - exit
+          #- exit
       register: firewall_cfg
 
     - debug:
-        var: firewall_cfg.stdout[1]
+        var: firewall_cfg.stdout[0]
