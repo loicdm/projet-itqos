@@ -5,5 +5,5 @@
       vyos.vyos.vyos_config:
         lines:
           - "delete qos interface {{ interface }} ingress '{{ name }}'"
-          - "delete qos policy shaper '{{ name }}'"
+          - "delete qos policy limiter '{{ name }}'"
         save: true
