@@ -7,8 +7,7 @@
           - show configuration json
       register: cfg_json
     - debug:
-      var: cfg_json.stdout[0]
-
+        var: cfg_json.stdout[0]
     - set_fact:
         vyos_config: "{{ cfg_json.stdout[0] | from_json }}"
 
