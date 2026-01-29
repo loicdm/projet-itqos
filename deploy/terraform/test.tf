@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+ssh://libvirt@vmhost/system"
+  uri = "qemu+ssh://loicdm@192.168.1.199/system"
 }
 
 ############################
