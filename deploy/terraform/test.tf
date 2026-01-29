@@ -1,43 +1,3 @@
-terraform {
-  required_providers {
-    libvirt = {
-      source  = "dmacvicar/libvirt"
-      version = ">= 0.9.0"
-    }
-  }
-}
-
-provider "libvirt" {
-  uri = "qemu+ssh://libvirt@vmhost/system"
-}
-
-############################
-# Isolated network
-############################
-
-resource "libvirt_network" "edge" {
-  name      = "edge-10"
-  autostart = true
-
-  bridge = {
-    name = "virbr-edge-10"
-  }
-}
-
-############################
-# Disk volume
-############################
-
-resource "libvirt_volume" "disk" {
-  name     = "edge-10.qcow2"
-  pool     = "default"
-  capacity = 10 * 1024 * 1024 * 1024
-}
-
-############################
-# Domain
-############################
-
 resource "libvirt_domain" "vyos" {
   name   = "edge-10"
   memory = 1024
@@ -49,12 +9,14 @@ resource "libvirt_domain" "vyos" {
     type         = "hvm"
     type_arch    = "x86_64"
     type_machine = "q35"
-    boot_devices = ["cdrom", "hd"]
+    boot_devices = [
+      { dev = "cdrom" },
+      { dev = "hd" }
+    ]
   }
 
   devices = {
     disks = [
-      # Main disk
       {
         source = {
           volume = {
@@ -66,8 +28,6 @@ resource "libvirt_domain" "vyos" {
           bus = "virtio"
         }
       },
-
-      # VyOS ISO (file on host)
       {
         source = {
           file = {
@@ -83,15 +43,12 @@ resource "libvirt_domain" "vyos" {
     ]
 
     interfaces = [
-      # eth0 → NAT
       {
         model = { type = "virtio" }
         source = {
           network = { network = "internet" }
         }
       },
-
-      # eth1 → isolated edge network
       {
         model = { type = "virtio" }
         source = {
@@ -100,17 +57,21 @@ resource "libvirt_domain" "vyos" {
       }
     ]
 
-    graphics = {
-      type = "spice"
-      listen = {
-        type    = "address"
-        address = "0.0.0.0"
+    graphics = [
+      {
+        type = "spice"
+        listen = {
+          type    = "address"
+          address = "0.0.0.0"
+        }
       }
-    }
+    ]
 
-    video = {
-      model = { type = "qxl" }
-    }
+    video = [
+      {
+        model = { type = "qxl" }
+      }
+    ]
 
     consoles = [
       {
