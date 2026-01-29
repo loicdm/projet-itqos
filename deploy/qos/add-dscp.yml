@@ -21,7 +21,7 @@
           - "set firewall ipv4 forward filter rule 30 action continue"
           - "set firewall ipv4 forward filter rule 30 protocol tcp"
           - "set firewall ipv4 forward filter rule 30 destination port 5201"
-          - "set firewall ipv4 forward filter rule 40 dscp 0"
+          - "set firewall ipv4 forward filter rule 30 dscp 0"
           - "set firewall ipv4 forward filter rule 30 set dscp 8"
 
           # iperf UDP -> CS1
