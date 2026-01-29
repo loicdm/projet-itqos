@@ -13,26 +13,26 @@
         bw_be: "{{ (rate * percent_be   / 100.0) | round(0, 'floor') | int }}"
         bw_cs1: "{{ rate - (bw_ef + bw_af41 + bw_be) }}"
 
-    - name: "Add shaper '{{ name }}' on {{ host }} interface {{ interface }}"
+    - name: "Add shaper SHAPERDSCP on {{ host }} interface {{ interface }}"
       vyos.vyos.vyos_config:
         lines:
-          - "set qos policy shaper {{ name }} bandwidth {{ rate }}mbit"
+          - "set qos policy shaper SHAPERDSCP bandwidth {{ rate }}mbit"
 
-          - "set qos policy shaper {{ name }} class 10 bandwidth {{ bw_ef }}mbit"
-          - "set qos policy shaper {{ name }} class 10 priority 7"
-          - "set qos policy shaper {{ name }} class 10 match EF ip dscp 46"
+          - "set qos policy shaper SHAPERDSCP class 10 bandwidth {{ bw_ef }}mbit"
+          - "set qos policy shaper SHAPERDSCP class 10 priority 7"
+          - "set qos policy shaper SHAPERDSCP class 10 match EF ip dscp 46"
 
-          - "set qos policy shaper {{ name }} class 20 bandwidth {{ bw_af41 }}mbit"
-          - "set qos policy shaper {{ name }} class 20 priority 6"
-          - "set qos policy shaper {{ name }} class 20 match AF41 ip dscp 34"
+          - "set qos policy shaper SHAPERDSCP class 20 bandwidth {{ bw_af41 }}mbit"
+          - "set qos policy shaper SHAPERDSCP class 20 priority 6"
+          - "set qos policy shaper SHAPERDSCP class 20 match AF41 ip dscp 34"
 
-          - "set qos policy shaper {{ name }} class 30 bandwidth {{ bw_be }}mbit"
-          - "set qos policy shaper {{ name }} class 30 priority 3"
-          - "set qos policy shaper {{ name }} class 30 match BE ip dscp 0"
+          - "set qos policy shaper SHAPERDSCP class 30 bandwidth {{ bw_be }}mbit"
+          - "set qos policy shaper SHAPERDSCP class 30 priority 3"
+          - "set qos policy shaper SHAPERDSCP class 30 match BE ip dscp 0"
 
-          - "set qos policy shaper {{ name }} class 40 bandwidth {{ bw_cs1 }}mbit"
-          - "set qos policy shaper {{ name }} class 40 priority 1"
-          - "set qos policy shaper {{ name }} class 40 match CS1 ip dscp 8"
+          - "set qos policy shaper SHAPERDSCP class 40 bandwidth {{ bw_cs1 }}mbit"
+          - "set qos policy shaper SHAPERDSCP class 40 priority 1"
+          - "set qos policy shaper SHAPERDSCP class 40 match CS1 ip dscp 8"
 
-          - "set qos interface {{ interface }} egress {{ name }}"
+          - "set qos interface {{ interface }} egress SHAPERDSCP"
         save: true
