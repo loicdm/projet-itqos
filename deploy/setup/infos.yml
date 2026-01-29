@@ -62,3 +62,18 @@
         - nat is defined
         - nat.stdout is defined
         - nat.stdout | length > 0
+
+    - name: "Get ip routes of {{ host }}"
+      vyos.vyos.vyos_command:
+        commands:
+          - show ip route
+      register: iproute
+      ignore_errors: yes
+
+    - debug:
+        msg: |
+          {{ iproute.stdout[0] }}
+      when:
+        - iproute is defined
+        - iproute.stdout is defined
+        - iproute.stdout | length > 0
