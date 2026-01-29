@@ -3,20 +3,62 @@
   ignore_unreachable: yes
 
   tasks:
-    - name: "View infos of {{ inventory_hostname }}"
+    - name: "View interfaces infos of {{ host }}"
       vyos.vyos.vyos_command:
         commands:
-          - show firewall
           - show interfaces
-          - show ip bgp
-          - show bgp summary
-          - show nat source rules
-      register: infos
+      register: interfaces
       ignore_errors: yes
 
     - debug:
         msg: |
-          {{ infos.stdout }}
+          {{ interfaces.stdout[0] }}
       when:
-        - infos is defined
-        - infos.stdout is defined
+        - interfaces is defined
+        - interfaces.stdout is defined
+        - interfaces.stdout | length > 0
+
+    - name: "View ip bgp infos of {{ host }}"
+      vyos.vyos.vyos_command:
+        commands:
+          - show ip bgp
+      register: ipbgp
+      ignore_errors: yes
+
+    - debug:
+        msg: |
+          {{ ipbgp.stdout[0] }}
+      when:
+        - ipbgp is defined
+        - ipbgp.stdout is defined
+        - ipbgp.stdout | length > 0
+
+    - name: "View bgp summary infos of {{ host }}"
+      vyos.vyos.vyos_command:
+        commands:
+          - show bgp summary
+      register: bgpsummary
+      ignore_errors: yes
+
+    - debug:
+        msg: |
+          {{ bgpsummary.stdout[0] }}
+      when:
+        - bgpsummary is defined
+        - bgpsummary.stdout is defined
+        - bgpsummary.stdout | length > 0
+
+    - name: "View nat source rules infos of {{ host }}"
+      vyos.vyos.vyos_command:
+        commands:
+          - show nat source rules
+      register: nat
+      ignore_errors: yes
+
+    - debug:
+        msg: |
+          {{ nat.stdout[0] }}
+      when:
+        - nat is defined
+        - nat.stdout is defined
+        - nat.stdout | length > 0
