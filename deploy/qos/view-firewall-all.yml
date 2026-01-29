@@ -19,4 +19,4 @@
       when:
         - firewall_cfg is defined
         - firewall_cfg.stdout is defined
-        - firewall_cfg.stdout | length > 1
+        - firewall_cfg.stdout | length > 0
