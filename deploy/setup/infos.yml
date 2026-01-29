@@ -3,7 +3,7 @@
   ignore_unreachable: yes
 
   tasks:
-    - name: "View interfaces infos of {{ host }}"
+    - name: "Get interfaces infos of {{ host }}"
       vyos.vyos.vyos_command:
         commands:
           - show interfaces
@@ -18,7 +18,7 @@
         - interfaces.stdout is defined
         - interfaces.stdout | length > 0
 
-    - name: "View ip bgp infos of {{ host }}"
+    - name: "Get ip bgp infos of {{ host }}"
       vyos.vyos.vyos_command:
         commands:
           - show ip bgp
@@ -33,7 +33,7 @@
         - ipbgp.stdout is defined
         - ipbgp.stdout | length > 0
 
-    - name: "View bgp summary infos of {{ host }}"
+    - name: "Get bgp summary infos of {{ host }}"
       vyos.vyos.vyos_command:
         commands:
           - show bgp summary
@@ -48,7 +48,7 @@
         - bgpsummary.stdout is defined
         - bgpsummary.stdout | length > 0
 
-    - name: "View nat source rules infos of {{ host }}"
+    - name: "Get nat source rules infos of {{ host }}"
       vyos.vyos.vyos_command:
         commands:
           - show nat source rules
