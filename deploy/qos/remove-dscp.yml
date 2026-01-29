@@ -1,9 +1,11 @@
 - hosts: "{{ host }}"
   gather_facts: no
   tasks:
-    - name: "Remove DSCP marking on {{ host }} interface : {{ interface }}"
+    - name: Remove DSCP marking rules on {{ host }}
       vyos.vyos.vyos_config:
         lines:
-          - "delete interfaces ethernet {{ interface }} firewall in name MARK"
-          - "delete firewall ipv4 name MARK"
+          - "delete firewall ipv4 forward filter rule 10"
+          - "delete firewall ipv4 forward filter rule 20"
+          - "delete firewall ipv4 forward filter rule 30"
+          - "delete firewall ipv4 forward filter rule 40"
         save: true
