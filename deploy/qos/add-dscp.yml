@@ -7,23 +7,27 @@
           # ICMP -> EF
           - "set firewall ipv4 forward filter rule 10 action continue"
           - "set firewall ipv4 forward filter rule 10 protocol icmp"
+          - "set firewall ipv4 forward filter rule 10 dscp 0"
           - "set firewall ipv4 forward filter rule 10 set dscp 46"
 
           # SSH -> AF41
           - "set firewall ipv4 forward filter rule 20 action continue"
           - "set firewall ipv4 forward filter rule 20 protocol tcp"
           - "set firewall ipv4 forward filter rule 20 destination port 22"
+          - "set firewall ipv4 forward filter rule 20 dscp 0"
           - "set firewall ipv4 forward filter rule 20 set dscp 34"
 
           # iperf TCP -> CS1
           - "set firewall ipv4 forward filter rule 30 action continue"
           - "set firewall ipv4 forward filter rule 30 protocol tcp"
           - "set firewall ipv4 forward filter rule 30 destination port 5201"
+          - "set firewall ipv4 forward filter rule 40 dscp 0"
           - "set firewall ipv4 forward filter rule 30 set dscp 8"
 
           # iperf UDP -> CS1
           - "set firewall ipv4 forward filter rule 40 action continue"
           - "set firewall ipv4 forward filter rule 40 protocol udp"
           - "set firewall ipv4 forward filter rule 40 destination port 5201"
+          - "set firewall ipv4 forward filter rule 40 dscp 0"
           - "set firewall ipv4 forward filter rule 40 set dscp 8"
         save: true
