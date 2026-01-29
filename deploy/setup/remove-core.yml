@@ -1,0 +1,17 @@
+- hosts: "{{ core }}"
+  gather_facts: no
+
+  tasks:
+    - name: Remove WireGuard interface on {{ inventory_hostname }}
+      vyos.vyos.vyos_config:
+        lines:
+          - "delete interfaces wireguard {{ wg_interface }}"
+        save: true
+
+    - name: Remove BGP configuration on {{ inventory_hostname }}
+      vyos.vyos.vyos_config:
+        lines:
+          - "delete protocols bgp system-as"
+          - "delete protocols bgp parameters router-id"
+          - "delete protocols bgp"
+        save: true
