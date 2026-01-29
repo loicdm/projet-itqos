@@ -2,8 +2,8 @@
   gather_facts: no
   vars:
     percent_ef: 10
-    percent_af41: 10
-    percent_be: 55
+    percent_af41: 40
+    percent_be: 20
 
   tasks:
     - name: Compute base class bandwidths
