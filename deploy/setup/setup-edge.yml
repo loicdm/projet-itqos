@@ -28,6 +28,7 @@
       vyos.vyos.vyos_config:
         lines:
           - "set interfaces ethernet {{ lan_interface }} address '{{ lan_address }}/{{ lan_mask }}'"
+          - "set interfaces ethernet {{ lan_interface }} description 'LAN'"
         save: true
 
     - name: Configure DHCP server

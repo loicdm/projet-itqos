@@ -50,6 +50,7 @@
       vyos.vyos.vyos_config:
         lines:
           - "delete interfaces ethernet {{ lan_interface }} address {{ lan_address }}/{{ lan_mask }}"
+          - "delete interfaces ethernet {{ lan_interface }} description 'LAN'"
         save: true
 
     - name: Remove route for internet traffic
