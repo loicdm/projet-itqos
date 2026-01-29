@@ -1,5 +1,6 @@
 - hosts: routers
   gather_facts: no
+  ignore_unreachable: yes
   tasks:
     - name: "View qos on {{ inventory_hostname }}"
       vyos.vyos.vyos_command:
@@ -13,3 +14,4 @@
         msg: |
           === QoS on {{ inventory_hostname }} ===
           {{ qos_cfg.stdout[1] }}
+      when: qos_cfg is defined
