@@ -20,6 +20,7 @@
       vyos.vyos.vyos_config:
         lines:
           - "set qos policy shaper SHAPERDSCP bandwidth {{ rate }}mbit"
+          - "set qos policy shaper SHAPERDSCP default bandwidth {{ bw_cs1 }}mbit"
 
           - "set qos policy shaper SHAPERDSCP class 10 bandwidth {{ bw_ef }}mbit"
           - "set qos policy shaper SHAPERDSCP class 10 priority 7"
