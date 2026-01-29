@@ -1,6 +1,9 @@
 - name: Testing libvirt
   hosts: vmhost
   gather_facts: no
+  collections:
+    - community.libvirt
+
   tasks:
     - name: Define isolated {{ vm }} network
       community.libvirt.virt_net:
@@ -16,6 +19,8 @@
 - name: Create VyOS VM from ISO
   hosts: vmhost
   gather_facts: false
+  collections:
+    - community.libvirt
 
   vars:
     vm_name: "{{ vm }}"
@@ -56,9 +61,12 @@
           name: generic
 
         networks:
+          # eth0 → NAT
           - network: "{{ nat_network_bridge }}"
             model:
               type: virtio
+
+          # eth1 → isolated edge network
           - network: "{{ vm_network_bridge }}"
             model:
               type: virtio
@@ -71,7 +79,6 @@
           cdrom: true
           hd: true
 
-        # Wait until VM finishes installer
         wait: false
 
     - name: Start the VM
