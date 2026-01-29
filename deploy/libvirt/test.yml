@@ -6,7 +6,7 @@
 
   tasks:
     - name: Define isolated {{ vm }} network
-      community.libvirt.virt_net:
+      virt_net:
         name: "{{ vm }}"
         state: present
         autostart: true
@@ -40,7 +40,7 @@
         mode: "0644"
 
     - name: Install VyOS VM from ISO
-      community.libvirt.virt_install:
+      virt_install:
         name: "{{ vm_name }}"
         memory: "{{ memory_mb }}"
         vcpus: "{{ vcpus }}"
@@ -76,6 +76,6 @@
         wait: false
 
     - name: Start the VM
-      community.libvirt.virt:
+      virt:
         name: "{{ vm_name }}"
         command: start
