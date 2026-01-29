@@ -1,8 +1,11 @@
 - hosts: "{{ host }}"
   gather_facts: no
+  ignore_unreachable: yes
+
   tasks:
     - name: "Removing all qos on {{ inventory_hostname }}"
       vyos.vyos.vyos_config:
         lines:
           - "delete qos"
         save: true
+      ignore_errors: yes

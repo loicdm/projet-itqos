@@ -1,5 +1,7 @@
 - hosts: "{{ host }}"
   gather_facts: no
+  ignore_unreachable: yes
+
   tasks:
     - name: "View qos on {{ inventory_hostname }}"
       vyos.vyos.vyos_command:
@@ -8,6 +10,12 @@
           - show qos
           - exit
       register: qos_cfg
+      ignore_errors: yes
 
     - debug:
-        var: qos_cfg.stdout[1]
+        msg: |
+          {{ qos_cfg.stdout[1] }}
+      when:
+        - qos_cfg is defined
+        - qos_cfg.stdout is defined
+        - qos_cfg.stdout | length > 1
