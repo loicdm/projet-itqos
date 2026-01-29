@@ -4,12 +4,10 @@
     - name: "View qos on {{ host }}"
       vyos.vyos.vyos_command:
         commands:
-          - show configuration json
-      register: cfg_json
-    - debug:
-        var: cfg_json.stdout[0]
-    - set_fact:
-        vyos_config: "{{ cfg_json.stdout[0] | from_json }}"
+          - configure
+          - show qos
+          - exit
+      register: qos_cfg
 
     - debug:
-        var: vyos_config.qos
+        var: qos_cfg.stdout[1]
