@@ -1,0 +1,22 @@
+- hosts: routers
+  gather_facts: no
+  ignore_unreachable: yes
+
+  tasks:
+    - name: "View firewall on {{ inventory_hostname }}"
+      vyos.vyos.vyos_command:
+        commands:
+          - configure
+          - show firewall
+          - exit
+      register: firewall_cfg
+      ignore_errors: yes
+
+    - debug:
+        msg: |
+          === firewall on {{ inventory_hostname }} ===
+          {{ firewall_cfg.stdout[1] }}
+      when:
+        - firewall_cfg is defined
+        - firewall_cfg.stdout is defined
+        - firewall_cfg.stdout | length > 1

@@ -1,0 +1,13 @@
+- hosts: "{{ host }}"
+  gather_facts: no
+  tasks:
+    - name: "View firewall on {{ host }}"
+      vyos.vyos.vyos_command:
+        commands:
+          - configure
+          - show firewall
+          - exit
+      register: firewall_cfg
+
+    - debug:
+        var: firewall_cfg.stdout[1]

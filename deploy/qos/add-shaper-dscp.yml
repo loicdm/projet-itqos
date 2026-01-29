@@ -1,0 +1,32 @@
+- hosts: "{{ host }}"
+  gather_facts: no
+  tasks:
+    - name: "Add shaper '{{ name }}' on {{ host }} interface {{ interface }}"
+      vyos.vyos.vyos_config:
+        lines:
+          # root bandwidth
+          - "set qos policy shaper {{ name }} bandwidth {{ rate }}mbit"
+
+          # class 10 - voice / icmp
+          - "set qos policy shaper {{ name }} class 10 bandwidth 5mbit"
+          - "set qos policy shaper {{ name }} class 10 priority 7"
+          - "set qos policy shaper {{ name }} class 10 match EF ip dscp 46"
+
+          # class 20 - ssh
+          - "set qos policy shaper {{ name }} class 20 bandwidth 5mbit"
+          - "set qos policy shaper {{ name }} class 20 priority 6"
+          - "set qos policy shaper {{ name }} class 20 match AF41 ip dscp 34"
+
+          # class 30 - best effort
+          - "set qos policy shaper {{ name }} class 30 bandwidth 20mbit"
+          - "set qos policy shaper {{ name }} class 30 priority 3"
+          - "set qos policy shaper {{ name }} class 30 match BE ip dscp 0"
+
+          # class 40 - bulk / iperf
+          - "set qos policy shaper {{ name }} class 40 bandwidth 5mbit"
+          - "set qos policy shaper {{ name }} class 40 priority 1"
+          - "set qos policy shaper {{ name }} class 40 match CS1 ip dscp 8"
+
+          # apply
+          - "set qos interface {{ interface }} egress {{ name }}"
+        save: true

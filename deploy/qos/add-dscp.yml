@@ -1,0 +1,27 @@
+- hosts: "{{ host }}"
+  gather_facts: no
+  tasks:
+    - name: "Add DSCP marking on {{ host }} interface : {{ interface }}"
+      vyos.vyos.vyos_config:
+        lines:
+          - "set firewall ipv4 name MARK rule 10 action continue"
+          - "set firewall ipv4 name MARK rule 10 protocol icmp"
+          - "set firewall ipv4 name MARK rule 10 set dscp 46"
+
+          - "set firewall ipv4 name MARK rule 20 action continue"
+          - "set firewall ipv4 name MARK rule 20 protocol tcp"
+          - "set firewall ipv4 name MARK rule 20 destination port 22"
+          - "set firewall ipv4 name MARK rule 20 set dscp 34"
+
+          - "set firewall ipv4 name MARK rule 30 action continue"
+          - "set firewall ipv4 name MARK rule 30 protocol tcp"
+          - "set firewall ipv4 name MARK rule 30 destination port 5201"
+          - "set firewall ipv4 name MARK rule 30 set dscp 8"
+
+          - "set firewall ipv4 name MARK rule 40 action continue"
+          - "set firewall ipv4 name MARK rule 40 protocol udp"
+          - "set firewall ipv4 name MARK rule 40 destination port 5201"
+          - "set firewall ipv4 name MARK rule 40 set dscp 8"
+
+          - "set interfaces ethernet {{ interface }} firewall in name MARK"
+        save: true
