@@ -9,13 +9,6 @@ terraform {
 
 provider "libvirt" {
   uri = "qemu+ssh://loicdm@192.168.1.199/system"
-  ssh {
-    user = "loicdm"
-    options = [
-      "-o StrictHostKeyChecking=no",
-      "-o UserKnownHostsFile=/dev/null"
-    ]
-  }
 }
 
 ############################
