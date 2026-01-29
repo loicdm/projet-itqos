@@ -23,5 +23,5 @@
           - "set firewall ipv4 name MARK rule 40 destination port 5201"
           - "set firewall ipv4 name MARK rule 40 set dscp 8"
 
-          - "set interfaces ethernet {{ interface }} firewall in name MARK"
+          - "set interfaces {{ type }} {{ interface }} firewall in name MARK"
         save: true

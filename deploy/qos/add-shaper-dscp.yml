@@ -1,32 +1,38 @@
 - hosts: "{{ host }}"
   gather_facts: no
+  vars:
+    percent_ef: 10
+    percent_af41: 10
+    percent_be: 55
+
   tasks:
+    - name: "Compute class bandwidths"
+      set_fact:
+        bw_ef: "{{ (rate * percent_ef / 100.0) | round(0, 'floor') | int }}"
+        bw_af41: "{{ (rate * percent_af41   / 100.0) | round(0, 'floor') | int }}"
+        bw_be: "{{ (rate * percent_be   / 100.0) | round(0, 'floor') | int }}"
+        bw_cs1: "{{ rate - (bw_ef + bw_af41 + bw_be) }}"
+
     - name: "Add shaper '{{ name }}' on {{ host }} interface {{ interface }}"
       vyos.vyos.vyos_config:
         lines:
-          # root bandwidth
           - "set qos policy shaper {{ name }} bandwidth {{ rate }}mbit"
 
-          # class 10 - voice / icmp
-          - "set qos policy shaper {{ name }} class 10 bandwidth 5mbit"
+          - "set qos policy shaper {{ name }} class 10 bandwidth {{ bw_ef }}mbit"
           - "set qos policy shaper {{ name }} class 10 priority 7"
           - "set qos policy shaper {{ name }} class 10 match EF ip dscp 46"
 
-          # class 20 - ssh
-          - "set qos policy shaper {{ name }} class 20 bandwidth 5mbit"
+          - "set qos policy shaper {{ name }} class 20 bandwidth {{ bw_af41 }}mbit"
           - "set qos policy shaper {{ name }} class 20 priority 6"
           - "set qos policy shaper {{ name }} class 20 match AF41 ip dscp 34"
 
-          # class 30 - best effort
-          - "set qos policy shaper {{ name }} class 30 bandwidth 20mbit"
+          - "set qos policy shaper {{ name }} class 30 bandwidth {{ bw_be }}mbit"
           - "set qos policy shaper {{ name }} class 30 priority 3"
           - "set qos policy shaper {{ name }} class 30 match BE ip dscp 0"
 
-          # class 40 - bulk / iperf
-          - "set qos policy shaper {{ name }} class 40 bandwidth 5mbit"
+          - "set qos policy shaper {{ name }} class 40 bandwidth {{ bw_cs1 }}mbit"
           - "set qos policy shaper {{ name }} class 40 priority 1"
           - "set qos policy shaper {{ name }} class 40 match CS1 ip dscp 8"
 
-          # apply
           - "set qos interface {{ interface }} egress {{ name }}"
         save: true
