@@ -45,10 +45,10 @@
     - name: Remove DHCP server subnet
       vyos.vyos.vyos_config:
         lines:
-          - "delete service dhcp-server shared-network-name LAN subnet {{ lan_network }}/{{ lan_mask }}"
+          - "delete service dhcp-server shared-network-name LAN"
         save: true
 
-    - name: Remove LAN interface address (optional)
+    - name: Remove LAN interface address
       vyos.vyos.vyos_config:
         lines:
           - "delete interfaces ethernet {{ lan_interface }} address {{ lan_address }}/{{ lan_mask }}"
@@ -66,6 +66,7 @@
       vyos.vyos.vyos_config:
         lines:
           - "delete interfaces wireguard {{ wg_interface }} peer {{ item }}"
+          - "delete interfaces wireguard {{ wg_interface }}"
         save: true
       loop: "{{ hostvars['localhost'].edge_list }}"
 
@@ -73,5 +74,6 @@
       vyos.vyos.vyos_config:
         lines:
           - "delete protocols bgp neighbor {{ hostvars[item].wg_address }}"
+          - "delete protocols bgp"
         save: true
       loop: "{{ hostvars['localhost'].edge_list }}"
