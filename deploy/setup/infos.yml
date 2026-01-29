@@ -1,0 +1,22 @@
+- hosts: "{{ host }}"
+  gather_facts: no
+  ignore_unreachable: yes
+
+  tasks:
+    - name: "View infos of {{ inventory_hostname }}"
+      vyos.vyos.vyos_command:
+        commands:
+          - show firewall
+          - show interfaces
+          - show ip bgp
+          - show bgp summary
+          - show nat source rules
+      register: infos
+      ignore_errors: yes
+
+    - debug:
+        msg: |
+          {{ infos.stdout }}
+      when:
+        - infos is defined
+        - infos.stdout is defined
