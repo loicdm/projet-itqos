@@ -1,5 +1,5 @@
 provider "libvirt" {
-  uri = "qemu+ssh://loicdm@vmhost/system"
+  uri = "qemu+ssh://loicdm@192.168.1.199/system"
 }
 
 resource "libvirt_network" "edge" {
