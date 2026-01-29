@@ -18,7 +18,6 @@ all:
         lan_interface: eth1
         lan_mask: 24
         wan_interface: eth0
-
       children:
         cores:
           hosts:
