@@ -39,13 +39,6 @@
         dest: "/var/lib/libvirt/images/{{ vm_name }}.iso"
         mode: "0644"
 
-    - name: Create disk for VM
-      community.libvirt.virt_volume:
-        pool: "{{ pool_name }}"
-        name: "{{ vm_name }}.qcow2"
-        capacity: "{{ disk_size_gb }}G"
-        format: qcow2
-
     - name: Install VyOS VM from ISO
       community.libvirt.virt_install:
         name: "{{ vm_name }}"
@@ -54,7 +47,8 @@
 
         disks:
           - pool: "{{ pool_name }}"
-            name: "{{ vm_name }}.qcow2"
+            size: "{{ disk_size_gb }}"
+            format: qcow2
           - cdrom: "/var/lib/libvirt/images/{{ vm_name }}.iso"
 
         osinfo:
