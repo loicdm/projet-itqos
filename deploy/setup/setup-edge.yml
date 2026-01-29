@@ -49,6 +49,12 @@
           - "set nat source rule 100 translation address masquerade"
         save: true
 
+    - name: Configure route for internet traffic
+      vyos.vyos.vyos_config:
+        lines:
+          - "set protocols static route 0.0.0.0/0 next-hop {{ internet_gateway }}"
+        save: true
+
     - name: Generate WireGuard key pair
       vyos_command:
         commands: generate pki wireguard key-pair
