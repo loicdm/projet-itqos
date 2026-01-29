@@ -3,7 +3,7 @@
   ignore_unreachable: yes
 
   tasks:
-    - name: "Removing all qos {{ host }}"
+    - name: "Removing all qos on {{ inventory_hostname }}"
       vyos.vyos.vyos_config:
         lines:
           - "delete qos"

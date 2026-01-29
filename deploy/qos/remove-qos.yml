@@ -1,7 +1,7 @@
 - hosts: "{{ host }}"
   gather_facts: no
   tasks:
-    - name: "Removing all qos {{ host }}"
+    - name: "Removing all qos on {{ host }}"
       vyos.vyos.vyos_config:
         lines:
           - "delete qos"
