@@ -14,7 +14,7 @@
 
     - name: Compute CS1 bandwidth
       set_fact:
-        bw_cs1: "{{ (rate | int) - (bw_ef + bw_af41 + bw_be) }}"
+        bw_cs1: "{{ (rate | int) - ((bw_ef | int) + (bw_af41 | int) + (bw_be | int)) }}"
 
     - name: "Add shaper SHAPERDSCP on {{ host }} interface {{ interface }}"
       vyos.vyos.vyos_config:
