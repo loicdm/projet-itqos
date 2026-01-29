@@ -34,7 +34,6 @@ all:
               lan_dhcp_range_start: 192.168.10.2
               lan_dhcp_range_end: 192.168.10.254
               lan_subnet_id: 10
-
             edge-2:
               ansible_host: 10.0.0.102
               wg_address: 10.100.0.3
@@ -43,7 +42,6 @@ all:
               lan_dhcp_range_start: 192.168.20.2
               lan_dhcp_range_end: 192.168.20.254
               lan_subnet_id: 20
-
             edge-3:
               ansible_host: 10.0.0.103
               wg_address: 10.100.0.4
