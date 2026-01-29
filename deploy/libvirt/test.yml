@@ -1,6 +1,10 @@
-# Listing VMs
-- name: List all VMs
-  community.libvirt.virt:
-    command: list_vms
-    uri: "qemu+ssh://loicdm@192.168.1.199/system"
-  register: all_vms
+- name: Testing libvirt
+  hosts: vmhost
+  gather_facts: no
+  tasks:
+    - name: List all VMs
+      community.libvirt.virt:
+        command: list_vms
+      register: all_vms
+    - debug:
+        var: all_vms
