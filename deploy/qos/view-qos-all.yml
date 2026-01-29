@@ -1,4 +1,4 @@
-- hosts: routers
+- hosts: "{{ host }}"
   gather_facts: no
   ignore_unreachable: yes
 
