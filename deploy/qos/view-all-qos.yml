@@ -9,6 +9,7 @@
           - show qos
           - exit
       register: qos_cfg
+      ignore_errors: yes
 
     - debug:
         msg: |
