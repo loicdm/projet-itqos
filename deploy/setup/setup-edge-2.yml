@@ -10,13 +10,13 @@
   gather_facts: no
 
   tasks:
-    - name: Configure LAN interface of {{ inventory_hostname }}
+    - name: Configure LAN interface
       vyos.vyos.vyos_config:
         lines:
           - "set interfaces ethernet {{ lan_interface }} address '{{ lan_address }}/{{ lan_mask }}'"
         save: true
 
-    - name: Configure DHCP server on {{ inventory_hostname }}
+    - name: Configure DHCP server
       vyos.vyos.vyos_config:
         lines:
           - "set service dhcp-server shared-network-name LAN authoritative"
@@ -27,7 +27,7 @@
           - "set service dhcp-server shared-network-name LAN subnet {{ lan_network }}/{{ lan_mask }} range 0 stop {{ lan_dhcp_range_end }}"
         save: true
 
-    - name: Configure NAT on {{ inventory_hostname }}
+    - name: Configure NAT
       vyos.vyos.vyos_config:
         lines:
           - "set nat source rule 100 outbound-interface name {{ wan_interface }}"
@@ -35,12 +35,12 @@
           - "set nat source rule 100 translation address masquerade"
         save: true
 
-    - name: Generate WireGuard key pair for {{ inventory_hostname }}
+    - name: Generate WireGuard key pair
       vyos_command:
         commands: generate pki wireguard key-pair
       register: wg_out
 
-    - name: Parse WireGuard keys for {{ inventory_hostname }}
+    - name: Parse WireGuard keys
       set_fact:
         wg_private_key: "{{ (wg_out.stdout[0] | regex_search('Private key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
         wg_public_key: "{{ (wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
@@ -69,12 +69,12 @@
           - "set protocols bgp address-family ipv4-unicast network {{ lan_network }}/{{ lan_mask }}"
         save: true
 
-- name: Configure {{ core }} router for all edges
+- name: Configure {{ core }} for  {{ edge }}
   hosts: "{{ core }}"
   gather_facts: no
 
   tasks:
-    - name: Add WireGuard peers for all edges on {{ inventory_hostname }} - {{ item }}
+    - name: Add WireGuard peers
       vyos.vyos.vyos_config:
         lines:
           - "set interfaces wireguard {{ wg_interface }} peer {{ item }} public-key '{{ hostvars[item].wg_public_key }}'"
@@ -83,7 +83,7 @@
         save: true
       loop: "{{ hostvars['localhost'].edge_list }}"
 
-    - name: Configure BGP neighbors for all edges on {{ inventory_hostname }} - {{ item }}
+    - name: Configure BGP neighbors
       vyos.vyos.vyos_config:
         lines:
           - "set protocols bgp neighbor {{ hostvars[item].wg_address }} remote-as {{ bgp_as }}"

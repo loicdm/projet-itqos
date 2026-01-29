@@ -20,7 +20,7 @@
   gather_facts: no
 
   tasks:
-    - name: Remove BGP configuration on {{ inventory_hostname }}
+    - name: Remove BGP configuration
       vyos.vyos.vyos_config:
         lines:
           - "delete protocols bgp neighbor {{ hostvars[core].wg_address }}"
@@ -28,25 +28,25 @@
           - "delete protocols bgp"
         save: true
 
-    - name: Remove WireGuard interface on {{ inventory_hostname }}
+    - name: Remove WireGuard interface
       vyos.vyos.vyos_config:
         lines:
           - "delete interfaces wireguard {{ wg_interface }}"
         save: true
 
-    - name: Remove NAT rule on {{ inventory_hostname }}
+    - name: Remove NAT rule
       vyos.vyos.vyos_config:
         lines:
           - "delete nat source rule 100"
         save: true
 
-    - name: Remove DHCP server subnet on {{ inventory_hostname }}
+    - name: Remove DHCP server subnet
       vyos.vyos.vyos_config:
         lines:
           - "delete service dhcp-server shared-network-name LAN"
         save: true
 
-    - name: Remove LAN interface address on {{ inventory_hostname }}
+    - name: Remove LAN interface address
       vyos.vyos.vyos_config:
         lines:
           - "delete interfaces ethernet {{ lan_interface }} address {{ lan_address }}/{{ lan_mask }}"
@@ -60,14 +60,14 @@
   gather_facts: no
 
   tasks:
-    - name: Remove WireGuard peers on {{ inventory_hostname }}
+    - name: Remove WireGuard peers
       vyos.vyos.vyos_config:
         lines:
           - "delete interfaces wireguard {{ wg_interface }} peer {{ item }}"
         save: true
       loop: "{{ hostvars['localhost'].edge_list }}"
 
-    - name: Remove BGP neighbors on {{ inventory_hostname }}
+    - name: Remove BGP neighbors
       vyos.vyos.vyos_config:
         lines:
           - "delete protocols bgp neighbor {{ hostvars[item].wg_address }}"
