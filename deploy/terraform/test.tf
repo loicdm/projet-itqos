@@ -17,8 +17,11 @@ provider "libvirt" {
 
 resource "libvirt_network" "edge" {
   name      = "edge-10"
-  bridge    = "virbr-edge-10"
   autostart = true
+
+  bridge = {
+    name = "virbr-edge-10"
+  }
 }
 
 ############################
