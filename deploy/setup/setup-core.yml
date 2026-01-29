@@ -9,7 +9,6 @@
     - name: "Parse WG keys for {{ inventory_hostname }}"
       set_fact:
         wg_private_key: "{{ (wg_out.stdout[0] | regex_search('Private key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
-        wg_public_key: "{{ (wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
 
     - name: "Configure WireGuard on {{ inventory_hostname }}"
       vyos.vyos.vyos_config:
@@ -26,10 +25,3 @@
           - "set protocols bgp system-as {{ bgp_as }}"
           - "set protocols bgp parameters router-id {{ wg_address }}"
         save: true
-
-    - name: Saving public key to file "host_vars/{{ inventory_hostname }}.yml"
-      copy:
-        dest: "host_vars/{{ inventory_hostname }}.yml"
-        content: |
-          wg_public_key: "{{ wg_public_key }}"
-      delegate_to: localhost

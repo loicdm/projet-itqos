@@ -1,3 +1,17 @@
+- name: Gathering {{ core }} WG public key
+  hosts: "{{ core }}"
+  gather_facts: no
+  tasks:
+    - name: Get {{ inventory_hostname }} WireGuard public key
+      vyos_command:
+        commands:
+          - "show interfaces wireguard {{ wg_interface }} public-key"
+      register: wg_pub_out
+
+    - name: Set public key fact
+      set_fact:
+        wg_public_key: "{{ wg_pub_out.stdout[0] | trim }}"
+
 - name: Resolve edge targets
   hosts: localhost
   gather_facts: no
@@ -54,7 +68,6 @@
           - "set interfaces wireguard {{ wg_interface }} peer core public-key '{{ hostvars[core].wg_public_key }}'"
           - "set interfaces wireguard {{ wg_interface }} peer core address '{{ hostvars[core].ansible_host }}'"
           - "set interfaces wireguard {{ wg_interface }} peer core port '{{ wg_port }}'"
-          #- "set interfaces wireguard {{ wg_interface }} peer core allowed-ips '{{ wg_network }}/{{ wg_mask }}'"
           - "set interfaces wireguard {{ wg_interface }} peer core allowed-ips '0.0.0.0/0'"
           - "set interfaces wireguard {{ wg_interface }} peer core persistent-keepalive '25'"
         save: true
