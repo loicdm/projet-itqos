@@ -59,7 +59,7 @@
         wg_private_key: "{{ (wg_out.stdout[0] | regex_search('Private key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
         wg_public_key: "{{ (wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
 
-    - name: Configure WireGuard interface on {{ inventory_hostname }}
+    - name: Configure WireGuard interface
       vyos.vyos.vyos_config:
         lines:
           - "set interfaces wireguard {{ wg_interface }} address '{{ wg_address }}/{{ wg_mask }}'"
@@ -82,7 +82,7 @@
           - "set protocols bgp address-family ipv4-unicast network {{ lan_network }}/{{ lan_mask }}"
         save: true
 
-- name: Configure {{ core }} for  {{ edge }}
+- name: Configure {{ core }} for {{ edge }}
   hosts: "{{ core }}"
   gather_facts: no
 
