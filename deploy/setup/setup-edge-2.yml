@@ -1,21 +1,22 @@
-- name: "Ajout des configurations sur {{ edge }}"
-  hosts: "{{ edge }}"
+- name: Resolve edge targets
+  hosts: localhost
   gather_facts: no
   tasks:
-    - name: Mark edge play as executed
-      set_fact:
-        edge_executed: true
-      delegate_to: localhost
-      delegate_facts: true
-      run_once: true
+    - set_fact:
+        edge_list: "{{ groups[edge] if edge in groups else [edge] }}"
 
-    - name: "Configure LAN interface on {{ edge }}"
+- name: Configuring {{ edge }}
+  hosts: "{{ hostvars['localhost'].edge_list }}"
+  gather_facts: no
+
+  tasks:
+    - name: Configure LAN interface of {{ inventory_hostname }}
       vyos.vyos.vyos_config:
         lines:
           - "set interfaces ethernet {{ lan_interface }} address '{{ lan_address }}/{{ lan_mask }}'"
         save: true
 
-    - name: "Configure DHCP server on {{ edge }}"
+    - name: Configure DHCP server on {{ inventory_hostname }}
       vyos.vyos.vyos_config:
         lines:
           - "set service dhcp-server shared-network-name LAN authoritative"
@@ -26,7 +27,7 @@
           - "set service dhcp-server shared-network-name LAN subnet {{ lan_network }}/{{ lan_mask }} range 0 stop {{ lan_dhcp_range_end }}"
         save: true
 
-    - name: "Configure NAT for LAN clients on {{ edge }}"
+    - name: Configure NAT on {{ inventory_hostname }}
       vyos.vyos.vyos_config:
         lines:
           - "set nat source rule 100 outbound-interface name {{ wan_interface }}"
@@ -34,35 +35,31 @@
           - "set nat source rule 100 translation address masquerade"
         save: true
 
-    - name: "Generate WG keys for {{ edge }}"
+    - name: Generate WireGuard key pair for {{ inventory_hostname }}
       vyos_command:
         commands: generate pki wireguard key-pair
       register: wg_out
 
-    - name: "Parse WG keys for {{ edge }}"
+    - name: Parse WireGuard keys for {{ inventory_hostname }}
       set_fact:
-        wg_edge_private_key: "{{ (wg_out.stdout[0] | regex_search('Private key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
-        wg_edge_public_key: "{{ (wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
-      delegate_to: localhost
-      delegate_facts: true
+        wg_private_key: "{{ (wg_out.stdout[0] | regex_search('Private key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
+        wg_public_key: "{{ (wg_out.stdout[0] | regex_search('Public key: ([A-Za-z0-9+/=]+)', '\\1'))[0] }}"
 
-    - name: "Configure WireGuard on {{ edge }}"
-      vars:
-        wg_edge_private_key: "{{ hostvars['localhost'].wg_edge_private_key }}"
+    - name: Configure WireGuard interface on {{ inventory_hostname }}
       vyos.vyos.vyos_config:
         lines:
           - "set interfaces wireguard {{ wg_interface }} address '{{ wg_address }}/{{ wg_mask }}'"
           - "set interfaces wireguard {{ wg_interface }} description 'WIREGUARD'"
-          - "set interfaces wireguard {{ wg_interface }} private-key '{{ wg_edge_private_key }}'"
+          - "set interfaces wireguard {{ wg_interface }} private-key '{{ wg_private_key }}'"
           - "set interfaces wireguard {{ wg_interface }} peer core public-key '{{ hostvars[core].wg_public_key }}'"
           - "set interfaces wireguard {{ wg_interface }} peer core address '{{ hostvars[core].ansible_host }}'"
           - "set interfaces wireguard {{ wg_interface }} peer core port '{{ wg_port }}'"
-          - "set interfaces wireguard {{ wg_interface }} peer core allowed-ips '{{ wg_network }}/{{ wg_mask }}'"
-          - "set interfaces wireguard {{ wg_interface }} peer core persistent-keepalive '25'"
+          #- "set interfaces wireguard {{ wg_interface }} peer core allowed-ips '{{ wg_network }}/{{ wg_mask }}'"
           - "set interfaces wireguard {{ wg_interface }} peer core allowed-ips '0.0.0.0/0'"
+          - "set interfaces wireguard {{ wg_interface }} peer core persistent-keepalive '25'"
         save: true
 
-    - name: "Configure BGP on {{ edge }}"
+    - name: Configure BGP
       vyos.vyos.vyos_config:
         lines:
           - "set protocols bgp system-as {{ bgp_as }}"
@@ -72,29 +69,26 @@
           - "set protocols bgp address-family ipv4-unicast network {{ lan_network }}/{{ lan_mask }}"
         save: true
 
-- name: "Ajout des configurations sur {{ core }}"
+- name: Configure {{ core }} router for all edges
   hosts: "{{ core }}"
   gather_facts: no
-  vars:
-    wg_edge_public_key: "{{ hostvars['localhost'].wg_edge_public_key }}"
-  pre_tasks:
-    - name: Stop play if edge was skipped
-      meta: end_play
-      when: not (hostvars['localhost'].edge_executed | default(false))
-  tasks:
-    - name: "Add {{ edge }} peer on {{ core }} WireGuard configuration"
-      vyos.vyos.vyos_config:
-        lines:
-          - "set interfaces wireguard {{ wg_interface }} peer {{ edge }} public-key '{{ wg_edge_public_key }}'"
-          - "set interfaces wireguard {{ wg_interface }} peer {{ edge }} allowed-ips '{{ hostvars[edge].wg_address }}/32'"
-          - "set interfaces wireguard {{ wg_interface }} peer {{ edge }} allowed-ips '{{ hostvars[edge].lan_network }}/{{ lan_mask }}'"
-        save: true
 
-    - name: "Add {{ edge }} BGP configurations on {{ core }}"
+  tasks:
+    - name: Add WireGuard peers for all edges on {{ inventory_hostname }} - {{ item }}
       vyos.vyos.vyos_config:
         lines:
-          - "set protocols bgp neighbor {{ hostvars[edge].wg_address }} remote-as {{ bgp_as }}"
-          - "set protocols bgp neighbor {{ hostvars[edge].wg_address }} address-family ipv4-unicast"
-          - "set protocols bgp neighbor {{ hostvars[edge].wg_address }} address-family ipv4-unicast route-reflector-client"
-          - "set protocols bgp neighbor {{ hostvars[edge].wg_address }} address-family ipv4-unicast nexthop-self"
-        save: true
+          - "set interfaces wireguard {{ wg_interface }} peer {{ item }} public-key '{{ hostvars[item].wg_public_key }}'"
+          - "set interfaces wireguard {{ wg_interface }} peer {{ item }} allowed-ips '{{ hostvars[item].wg_address }}/32'"
+          - "set interfaces wireguard {{ wg_interface }} peer {{ item }} allowed-ips '{{ hostvars[item].lan_network }}/{{ lan_mask }}'"
+      loop: "{{ hostvars['localhost'].edge_list }}"
+      save: true
+
+    - name: Configure BGP neighbors for all edges on {{ inventory_hostname }} - {{ item }}
+      vyos.vyos.vyos_config:
+        lines:
+          - "set protocols bgp neighbor {{ hostvars[item].wg_address }} remote-as {{ bgp_as }}"
+          - "set protocols bgp neighbor {{ hostvars[item].wg_address }} address-family ipv4-unicast"
+          - "set protocols bgp neighbor {{ hostvars[item].wg_address }} address-family ipv4-unicast route-reflector-client"
+          - "set protocols bgp neighbor {{ hostvars[item].wg_address }} address-family ipv4-unicast nexthop-self"
+      loop: "{{ hostvars['localhost'].edge_list }}"
+      save: true

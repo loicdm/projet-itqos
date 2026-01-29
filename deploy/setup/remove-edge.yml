@@ -1,0 +1,77 @@
+---
+########################################
+# Resolve edge targets
+########################################
+- name: Resolve edge targets
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Validate edge variable
+      fail:
+        msg: "edge '{{ edge }}' is not a valid host or group"
+      when: edge not in groups and edge not in hostvars
+
+    - name: Build edge_list
+      set_fact:
+        edge_list: "{{ groups[edge] if edge in groups else [edge] }}"
+
+########################################
+# Remove configuration from edges
+########################################
+- name: Remove configuration from edges
+  hosts: "{{ hostvars['localhost'].edge_list }}"
+  gather_facts: no
+
+  tasks:
+    - name: Remove BGP configuration
+      vyos.vyos.vyos_config:
+        lines:
+          - "delete protocols bgp neighbor {{ hostvars[core].wg_address }}"
+          - "delete protocols bgp address-family ipv4-unicast network {{ lan_network }}/{{ lan_mask }}"
+        save: true
+
+    - name: Remove WireGuard interface
+      vyos.vyos.vyos_config:
+        lines:
+          - "delete interfaces wireguard {{ wg_interface }}"
+        save: true
+
+    - name: Remove NAT rule
+      vyos.vyos.vyos_config:
+        lines:
+          - "delete nat source rule 100"
+        save: true
+
+    - name: Remove DHCP server subnet
+      vyos.vyos.vyos_config:
+        lines:
+          - "delete service dhcp-server shared-network-name LAN subnet {{ lan_network }}/{{ lan_mask }}"
+        save: true
+
+    - name: Remove LAN interface address (optional)
+      vyos.vyos.vyos_config:
+        lines:
+          - "delete interfaces ethernet {{ lan_interface }} address {{ lan_address }}/{{ lan_mask }}"
+        save: true
+
+########################################
+# Remove edges from core
+########################################
+- name: Remove edges from core
+  hosts: "{{ core }}"
+  gather_facts: no
+
+  tasks:
+    - name: Remove WireGuard peers
+      vyos.vyos.vyos_config:
+        lines:
+          - "delete interfaces wireguard {{ wg_interface }} peer {{ item }}"
+      loop: "{{ hostvars['localhost'].edge_list }}"
+      save: true
+
+    - name: Remove BGP neighbors
+      vyos.vyos.vyos_config:
+        lines:
+          - "delete protocols bgp neighbor {{ hostvars[item].wg_address }}"
+      loop: "{{ hostvars['localhost'].edge_list }}"
+      save: true
