@@ -66,12 +66,12 @@
       vyos.vyos.vyos_config:
         lines:
           - "delete interfaces wireguard {{ wg_interface }} peer {{ item }}"
+        save: true
       loop: "{{ hostvars['localhost'].edge_list }}"
-      save: true
 
     - name: Remove BGP neighbors
       vyos.vyos.vyos_config:
         lines:
           - "delete protocols bgp neighbor {{ hostvars[item].wg_address }}"
+        save: true
       loop: "{{ hostvars['localhost'].edge_list }}"
-      save: true

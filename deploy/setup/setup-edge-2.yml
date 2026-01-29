@@ -80,8 +80,8 @@
           - "set interfaces wireguard {{ wg_interface }} peer {{ item }} public-key '{{ hostvars[item].wg_public_key }}'"
           - "set interfaces wireguard {{ wg_interface }} peer {{ item }} allowed-ips '{{ hostvars[item].wg_address }}/32'"
           - "set interfaces wireguard {{ wg_interface }} peer {{ item }} allowed-ips '{{ hostvars[item].lan_network }}/{{ lan_mask }}'"
+        save: true
       loop: "{{ hostvars['localhost'].edge_list }}"
-      save: true
 
     - name: Configure BGP neighbors for all edges on {{ inventory_hostname }} - {{ item }}
       vyos.vyos.vyos_config:
@@ -90,5 +90,5 @@
           - "set protocols bgp neighbor {{ hostvars[item].wg_address }} address-family ipv4-unicast"
           - "set protocols bgp neighbor {{ hostvars[item].wg_address }} address-family ipv4-unicast route-reflector-client"
           - "set protocols bgp neighbor {{ hostvars[item].wg_address }} address-family ipv4-unicast nexthop-self"
+        save: true
       loop: "{{ hostvars['localhost'].edge_list }}"
-      save: true
