@@ -17,74 +17,106 @@ provider "libvirt" {
 
 resource "libvirt_network" "edge" {
   name      = "edge-10"
+  bridge    = "virbr-edge-10"
   autostart = true
-
-  bridge {
-    name = "virbr-edge-10"
-  }
 }
 
 ############################
-# Volumes
+# Disk volume
 ############################
 
 resource "libvirt_volume" "disk" {
-  name   = "edge-10.qcow2"
-  pool   = "default"
+  name     = "edge-10.qcow2"
+  pool     = "default"
   capacity = 10 * 1024 * 1024 * 1024
-}
-
-resource "libvirt_volume" "iso" {
-  name   = "vyos.iso"
-  pool   = "default"
-  source = "https://community-downloads.vyos.dev/stream/2025.11/vyos-2025.11-generic-amd64.iso"
 }
 
 ############################
 # Domain
 ############################
 
-resource "libvirt_domain" "vm" {
+resource "libvirt_domain" "vyos" {
   name   = "edge-10"
-  type   = "kvm"
   memory = 1024
+  memory_unit = "MiB"
   vcpu   = 2
+  type   = "kvm"
 
-  disk {
-    volume_id = libvirt_volume.disk.id
+  os = {
+    type         = "hvm"
+    type_arch    = "x86_64"
+    type_machine = "q35"
+    boot_devices = ["cdrom", "hd"]
   }
 
-  disk {
-    volume_id = libvirt_volume.iso.id
-  }
+  devices = {
+    disks = [
+      # Main disk
+      {
+        source = {
+          volume = {
+            volume_id = libvirt_volume.disk.id
+          }
+        }
+        target = {
+          dev = "vda"
+          bus = "virtio"
+        }
+      },
 
-  network_interface {
-    network_name = "internet"
-    model        = "virtio"
-  }
+      # VyOS ISO (file on host)
+      {
+        source = {
+          file = {
+            file = "/var/lib/libvirt/images/vyos.iso"
+          }
+        }
+        target = {
+          dev = "sda"
+          bus = "sata"
+        }
+        readonly = true
+      }
+    ]
 
-  network_interface {
-    network_id = libvirt_network.edge.id
-    model      = "virtio"
-  }
+    interfaces = [
+      # eth0 → NAT
+      {
+        model = { type = "virtio" }
+        source = {
+          network = { network = "internet" }
+        }
+      },
 
-  graphics {
-    type        = "spice"
-    autoport    = true
-    listen_type = "address"
-  }
+      # eth1 → isolated edge network
+      {
+        model = { type = "virtio" }
+        source = {
+          network = { network = libvirt_network.edge.name }
+        }
+      }
+    ]
 
-  video {
-    type = "qxl"
-  }
+    graphics = {
+      type = "spice"
+      listen = {
+        type    = "address"
+        address = "0.0.0.0"
+      }
+    }
 
-  boot_device {
-    dev = ["cdrom", "hd"]
-  }
+    video = {
+      model = { type = "qxl" }
+    }
 
-  console {
-    type        = "pty"
-    target_port = "0"
-    target_type = "serial"
+    consoles = [
+      {
+        type = "pty"
+        target = {
+          type = "serial"
+          port = "0"
+        }
+      }
+    ]
   }
 }
