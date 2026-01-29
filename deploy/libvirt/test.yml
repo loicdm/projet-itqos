@@ -2,9 +2,79 @@
   hosts: vmhost
   gather_facts: no
   tasks:
-    - name: List all VMs
+    - name: Define isolated {{ vm }} network
+      community.libvirt.virt_net:
+        name: "{{ vm }}"
+        state: present
+        autostart: true
+        xml: |
+          <network>
+            <name>{{ vm }}</name>
+            <bridge name='virbr-{{ vm }}' stp='on' delay='0'/>
+          </network>
+
+- name: Create VyOS VM from ISO
+  hosts: vmhost
+  gather_facts: false
+
+  vars:
+    vm_name: "{{ vm }}"
+    memory_mb: 1024
+    vcpus: 2
+    disk_size_gb: 10
+    iso_url: "https://community-downloads.vyos.dev/stream/2025.11/vyos-2025.11-generic-amd64.iso"
+    pool_name: default
+    nat_network_bridge: internet
+    vm_network_bridge: "{{ vm }}"
+
+  tasks:
+    - name: Download VyOS ISO
+      ansible.builtin.get_url:
+        url: "{{ iso_url }}"
+        dest: "/var/lib/libvirt/images/{{ vm_name }}.iso"
+        mode: "0644"
+
+    - name: Create disk for VM
+      community.libvirt.virt_volume:
+        pool: "{{ pool_name }}"
+        name: "{{ vm_name }}.qcow2"
+        capacity: "{{ disk_size_gb }}G"
+        format: qcow2
+
+    - name: Install VyOS VM from ISO
+      community.libvirt.virt_install:
+        name: "{{ vm_name }}"
+        memory: "{{ memory_mb }}"
+        vcpus: "{{ vcpus }}"
+
+        disks:
+          - pool: "{{ pool_name }}"
+            name: "{{ vm_name }}.qcow2"
+          - cdrom: "/var/lib/libvirt/images/{{ vm_name }}.iso"
+
+        osinfo:
+          name: generic
+
+        networks:
+          - network: "{{ nat_network_bridge }}"
+            model:
+              type: virtio
+          - network: "{{ vm_network_bridge }}"
+            model:
+              type: virtio
+
+        graphics:
+          type: spice
+          listen: 0.0.0.0
+
+        boot:
+          cdrom: true
+          hd: true
+
+        # Wait until VM finishes installer
+        wait: false
+
+    - name: Start the VM
       community.libvirt.virt:
-        command: list_vms
-      register: all_vms
-    - debug:
-        var: all_vms
+        name: "{{ vm_name }}"
+        command: start
