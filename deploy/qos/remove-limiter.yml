@@ -1,7 +1,7 @@
 - hosts: "{{ host }}"
   gather_facts: no
   tasks:
-    - name: "Removing shaper '{{ name }}' on {{ host }} interface : {{ interface }}"
+    - name: "Removing limiter '{{ name }}' on {{ host }} interface : {{ interface }}"
       vyos.vyos.vyos_config:
         lines:
           - "delete qos interface {{ interface }} ingress '{{ name }}'"

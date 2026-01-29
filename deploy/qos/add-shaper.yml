@@ -1,7 +1,7 @@
 - hosts: "{{ host }}"
   gather_facts: no
   tasks:
-    - name: "Configure shaper '{{ name }}' on {{ host }} interface : {{ interface }}"
+    - name: "Add shaper '{{ name }}' on {{ host }} interface : {{ interface }}"
       vyos.vyos.vyos_config:
         lines:
           - "set qos policy shaper '{{ name }}' default bandwidth {{ rate }}mbit"
