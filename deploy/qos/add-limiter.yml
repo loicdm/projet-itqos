@@ -1,7 +1,7 @@
 - hosts: "{{ host }}"
   gather_facts: no
   tasks:
-    - name: "Add limiter '{{ name }}' on {{ host }} interface : {{ interface }}"
+    - name: "Add limiter '{{ name }}' on {{ inventory_hostname }} interface : {{ interface }}"
       vyos.vyos.vyos_config:
         lines:
           - "set qos policy limiter '{{ name }}' default bandwidth {{ rate }}mbit"

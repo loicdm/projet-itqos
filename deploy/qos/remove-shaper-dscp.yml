@@ -1,7 +1,7 @@
 - hosts: "{{ host }}"
   gather_facts: no
   tasks:
-    - name: "Remove shaper 'SHAPERDSCP' on {{ host }} interface {{ interface }}"
+    - name: "Remove shaper 'SHAPERDSCP' on {{ inventory_hostname }} interface {{ interface }}"
       vyos.vyos.vyos_config:
         lines:
           - "delete qos interface {{ interface }} egress SHAPERDSCP"
