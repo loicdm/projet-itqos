@@ -1,0 +1,13 @@
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: "View qos on {{ inventory_hostname }}"
+      vyos.vyos.vyos_command:
+        commands:
+          - configure
+          - show qos
+          - exit
+      register: qos_cfg
+
+    - debug:
+        msg: "qos on {{ inventory_hostname }} is : {{ qos_cfg.stdout[1] }}"
