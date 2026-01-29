@@ -1,3 +1,43 @@
+terraform {
+  required_providers {
+    libvirt = {
+      source  = "dmacvicar/libvirt"
+      version = ">= 0.9.0"
+    }
+  }
+}
+
+provider "libvirt" {
+  uri = "qemu+ssh://libvirt@vmhost/system"
+}
+
+############################
+# Isolated network
+############################
+
+resource "libvirt_network" "edge" {
+  name      = "edge-10"
+  autostart = true
+
+  bridge = {
+    name = "virbr-edge-10"
+  }
+}
+
+############################
+# Disk volume
+############################
+
+resource "libvirt_volume" "disk" {
+  name     = "edge-10.qcow2"
+  pool     = "default"
+  capacity = 10 * 1024 * 1024 * 1024
+}
+
+############################
+# Domain
+############################
+
 resource "libvirt_domain" "vyos" {
   name   = "edge-10"
   memory = 1024
