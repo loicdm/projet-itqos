@@ -1,0 +1,774 @@
+{
+  "environments": [
+    {
+      "json": "{}",
+      "name": "Empty"
+    }
+  ],
+  "integration_aliases": [],
+  "integrations": [],
+  "inventories": [
+    {
+      "become_key": "vyos",
+      "inventory": "inventory.yaml",
+      "name": "routers",
+      "ssh_key": "loicdm",
+      "type": "file"
+    }
+  ],
+  "keys": [
+    {
+      "name": "loicdm",
+      "owner": "",
+      "type": "ssh"
+    },
+    {
+      "name": "None",
+      "owner": "",
+      "type": "none"
+    },
+    {
+      "name": "vyos",
+      "owner": "",
+      "type": "login_password"
+    }
+  ],
+  "meta": {
+    "alert": false,
+    "max_parallel_tasks": 0,
+    "name": "sdwan",
+    "type": ""
+  },
+  "repositories": [
+    {
+      "git_branch": "main",
+      "git_url": "git@github.com:loicdm/projet-itqos.git",
+      "name": "projet-itqos.git",
+      "ssh_key": "loicdm"
+    }
+  ],
+  "schedules": [],
+  "secret_storages": [],
+  "templates": [
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "add-cake",
+      "playbook": "deploy/qos/add-cake.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "CAKE",
+          "description": "Name of the policy",
+          "name": "name",
+          "required": true,
+          "title": "Name :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "100",
+          "description": "Rate of the shaper",
+          "name": "rate",
+          "required": true,
+          "title": "Rate : ",
+          "type": "int",
+          "values": []
+        },
+        {
+          "default_value": "core",
+          "description": "Host to deploy the qos into",
+          "name": "host",
+          "required": true,
+          "title": "Host :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "wg0",
+          "description": "Interface to apply the shaper on",
+          "name": "interface",
+          "required": true,
+          "title": "Interface",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "add QoS"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "add-dscp",
+      "playbook": "deploy/qos/add-dscp.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "core",
+          "description": "Host to deploy the qos into",
+          "name": "host",
+          "required": true,
+          "title": "Host :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "add QoS"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "add-limiter",
+      "playbook": "deploy/qos/add-limiter.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "LIMITER",
+          "description": "Name of the policy",
+          "name": "name",
+          "required": true,
+          "title": "Name :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "100",
+          "description": "Rate of the shaper",
+          "name": "rate",
+          "required": true,
+          "title": "Rate : ",
+          "type": "int",
+          "values": []
+        },
+        {
+          "default_value": "core",
+          "description": "Host to deploy the qos into",
+          "name": "host",
+          "required": true,
+          "title": "Host :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "wg0",
+          "description": "Interface to apply the shaper on",
+          "name": "interface",
+          "required": true,
+          "title": "Interface",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "add QoS"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "add-shaper",
+      "playbook": "deploy/qos/add-shaper.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "SHAPER",
+          "description": "Name of the policy",
+          "name": "name",
+          "required": true,
+          "title": "Name :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "100",
+          "description": "Rate of the shaper",
+          "name": "rate",
+          "required": true,
+          "title": "Rate : ",
+          "type": "int",
+          "values": []
+        },
+        {
+          "default_value": "edge-1",
+          "description": "Host to deploy the qos into",
+          "name": "host",
+          "required": true,
+          "title": "Host :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "wg0",
+          "description": "Interface to apply the shaper on",
+          "name": "interface",
+          "required": true,
+          "title": "Interface",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "add QoS"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "add-shaper-dscp",
+      "playbook": "deploy/qos/add-shaper-dscp.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "100",
+          "description": "Rate of the shaper",
+          "name": "rate",
+          "required": true,
+          "title": "Rate : ",
+          "type": "int",
+          "values": []
+        },
+        {
+          "default_value": "core",
+          "description": "Host to deploy the qos into",
+          "name": "host",
+          "required": true,
+          "title": "Host :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "wg0",
+          "description": "Interface to apply the shaper on",
+          "name": "interface",
+          "required": true,
+          "title": "Interface",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "add QoS"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "remove-cake",
+      "playbook": "deploy/qos/remove-cake.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "CAKE",
+          "description": "Name of the policy",
+          "name": "name",
+          "required": true,
+          "title": "Name :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "core",
+          "description": "Host where to remove the policy",
+          "name": "host",
+          "required": true,
+          "title": "Host :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "wg0",
+          "description": "Interface where to remove the shaper",
+          "name": "interface",
+          "required": true,
+          "title": "Interface :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "remove QoS"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "remove-core",
+      "playbook": "deploy/setup/remove-core.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "core",
+          "description": "name of core in ansible inventory",
+          "name": "core",
+          "required": true,
+          "title": "core host :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "setup"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "remove-dscp",
+      "playbook": "deploy/qos/remove-dscp.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "core",
+          "description": "Host where to remove the policy",
+          "name": "host",
+          "required": true,
+          "title": "Host :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "remove QoS"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "remove-edge",
+      "playbook": "deploy/setup/remove-edge.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "edge-1",
+          "description": "hostname of edge in inventory.yaml",
+          "name": "edge",
+          "required": true,
+          "title": "Edge Host :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "core",
+          "description": "Core hostname in inventory.yaml",
+          "name": "core",
+          "required": true,
+          "title": "Core Host :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "setup"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "remove-firewall",
+      "playbook": "deploy/qos/remove-firewall.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "core",
+          "description": "Host where to remove all qos",
+          "name": "host",
+          "required": true,
+          "title": "Host :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "remove QoS"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "remove-limiter",
+      "playbook": "deploy/qos/remove-limiter.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "LIMITER",
+          "description": "Name of the policy",
+          "name": "name",
+          "required": true,
+          "title": "Name :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "core",
+          "description": "Host where to remove the policy",
+          "name": "host",
+          "required": true,
+          "title": "Host :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "wg0",
+          "description": "Interface where to remove the shaper",
+          "name": "interface",
+          "required": true,
+          "title": "Interface :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "remove QoS"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "remove-qos",
+      "playbook": "deploy/qos/remove-qos.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "core",
+          "description": "Host where to remove all qos",
+          "name": "host",
+          "required": true,
+          "title": "Host :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "remove QoS"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "remove-shaper",
+      "playbook": "deploy/qos/remove-shaper.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "SHAPER",
+          "description": "Name of the policy",
+          "name": "name",
+          "required": true,
+          "title": "Name :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "core",
+          "description": "Host where to remove the policy",
+          "name": "host",
+          "required": true,
+          "title": "Host :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "wg0",
+          "description": "Interface where to remove the shaper",
+          "name": "interface",
+          "required": true,
+          "title": "Interface :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "remove QoS"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "remove-shaper-dscp",
+      "playbook": "deploy/qos/remove-shaper-dscp.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "core",
+          "description": "Host where to remove the policy",
+          "name": "host",
+          "required": true,
+          "title": "Host :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "wg0",
+          "description": "Interface where to remove the shaper",
+          "name": "interface",
+          "required": true,
+          "title": "Interface :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "remove QoS"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "setup-core",
+      "playbook": "deploy/setup/setup-core.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "core",
+          "description": "name of core in ansible inventory",
+          "name": "core",
+          "required": true,
+          "title": "core host :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "setup"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "setup-edge",
+      "playbook": "deploy/setup/setup-edge.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "edge-1",
+          "description": "hostname of edge in inventory.yaml",
+          "name": "edge",
+          "required": true,
+          "title": "Edge Host :",
+          "type": "",
+          "values": []
+        },
+        {
+          "default_value": "core",
+          "description": "Core hostname in inventory.yaml",
+          "name": "core",
+          "required": true,
+          "title": "Core Host :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "setup"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "view-firewall",
+      "playbook": "deploy/qos/view-firewall.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "core",
+          "description": "Host to search qos on",
+          "name": "host",
+          "required": true,
+          "title": "Host :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "view QoS"
+    },
+    {
+      "allow_override_args_in_task": false,
+      "allow_override_branch_in_task": false,
+      "allow_parallel_tasks": false,
+      "app": "ansible",
+      "arguments": "[]",
+      "autorun": false,
+      "environment": "Empty",
+      "inventory": "routers",
+      "name": "view-qos",
+      "playbook": "deploy/qos/view-qos.yml",
+      "repository": "projet-itqos.git",
+      "suppress_success_alerts": false,
+      "survey_vars": [
+        {
+          "default_value": "core",
+          "description": "Host to search qos on",
+          "name": "host",
+          "required": true,
+          "title": "Host :",
+          "type": "",
+          "values": []
+        }
+      ],
+      "task_params": {},
+      "type": "",
+      "vaults": [],
+      "view": "view QoS"
+    }
+  ],
+  "views": [
+    {
+      "position": 0,
+      "title": "setup"
+    },
+    {
+      "position": 1,
+      "title": "view QoS"
+    },
+    {
+      "position": 2,
+      "title": "add QoS"
+    },
+    {
+      "position": 3,
+      "title": "remove QoS"
+    }
+  ]
+}
